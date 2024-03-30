@@ -34,16 +34,19 @@ public class DAO extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+
+
+
     //METODO QUE INSERE PESSOA NO BANCO
     public void inserePessoa(Pessoa pessoa){
         SQLiteDatabase db = getWritableDatabase();
         ContentValues dados = new ContentValues();
-        dados.put("nome", pessoa.getNome());
-        dados.put("sexo", pessoa.getSexo());
-        dados.put("nomeSUS", pessoa.getNomeSUS());
-        dados.put("dataNascimento", pessoa.getDataNascimento());
-        dados.put("numSUS", pessoa.getNumSUS());
-        dados.put("foto", pessoa.getFoto());
+        dados.put("nome", pessoa.getPessoa_nome());
+        dados.put("sexo", pessoa.getPessoa_sexo());
+        dados.put("nomeSUS", pessoa.getPessoa_nomeSUS());
+        dados.put("dataNascimento", pessoa.getPessoa_dataNascimento()); // resolver problema de String =/= date
+        dados.put("numSUS", pessoa.getPessoa_numSUS());
+        dados.put("foto", pessoa.getPessoa_foto());
 
         db.insert("pessoa", null, dados);
     }
@@ -59,12 +62,12 @@ public class DAO extends SQLiteOpenHelper {
 
         while (c.moveToNext()){
             Pessoa pessoa = new Pessoa();
-            pessoa.setNome(c.getString(c.getColumnIndex("nome")));
-            pessoa.setSexo(c.getString(c.getColumnIndex("sexo")));
-            pessoa.setNomeSUS(c.getString(c.getColumnIndex("nomeSUS")));
-            pessoa.setDataNascimento(c.getString(c.getColumnIndex("dataNascimento")));
-            pessoa.setNumSUS(Integer.valueOf(c.getString(c.getColumnIndex("numSUS"))));
-            pessoa.setFoto(c.getString(c.getColumnIndex("foto")));
+            pessoa.setPessoa_nome(c.getString(c.getColumnIndex("nome")));
+            pessoa.setPessoa_sexo(c.getString(c.getColumnIndex("sexo")));
+            pessoa.setPessoa_nomeSUS(c.getString(c.getColumnIndex("nomeSUS")));
+            pessoa.setPessoa_dataNascimento(c.getString(c.getColumnIndex("dataNascimento")));
+            pessoa.setPessoa_numSUS(c.getString(c.getColumnIndex("numSUS")));
+            pessoa.setPessoa_foto(c.getString(c.getColumnIndex("foto")));
             pessoas.add(pessoa);
         }
         return pessoas;

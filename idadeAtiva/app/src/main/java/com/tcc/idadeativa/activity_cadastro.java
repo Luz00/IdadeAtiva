@@ -36,8 +36,13 @@ public class activity_cadastro extends Activity {
     private static final String TAG = "activity_cadastro";
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     private static final int REQUEST_IMAGE_PICK = 2;
+
+
     private ImageView ivUser;
     private String fotoString = "";
+
+    private Uri imagePath;
+    private Bitmap imageToStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,13 +148,13 @@ public class activity_cadastro extends Activity {
                 if (!(lblNome.getText().toString().equals("") || singleSelectSpinner.getSelectedItem().equals("") || mDisplayDate.getText().toString().equals("") || lblNomeSus.getText().toString().equals("") || lblNumeroCartao.getText().toString().equals(""))) {
                     DAO dao = new DAO(getApplicationContext());
                     Pessoa pessoa = new Pessoa();
-                    pessoa.setNome(lblNome.getText().toString());
+                    pessoa.setPessoa_nome(lblNome.getText().toString());
                     String sexoSelecionado = singleSelectSpinner.getSelectedItem().toString();
-                    pessoa.setSexo(sexoSelecionado);
-                    pessoa.setDataNascimento(mDisplayDate.getText().toString());
-                    pessoa.setNomeSUS(lblNomeSus.getText().toString());
-                    pessoa.setNumSUS(Integer.valueOf(lblNumeroCartao.getText().toString()));
-                    pessoa.setFoto(fotoString);
+                    pessoa.setPessoa_sexo(sexoSelecionado);
+                    pessoa.setPessoa_dataNascimento(mDisplayDate.getText().toString());
+                    pessoa.setPessoa_nomeSUS(lblNomeSus.getText().toString());
+                    pessoa.setPessoa_numSUS(lblNumeroCartao.getText().toString());
+                    pessoa.setPessoa_foto(fotoString);
                     dao.inserePessoa(pessoa);
                     dao.close();
 

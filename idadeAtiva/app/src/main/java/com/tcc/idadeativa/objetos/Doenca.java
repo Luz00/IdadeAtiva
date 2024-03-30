@@ -2,19 +2,22 @@ package com.tcc.idadeativa.objetos;
 
 public class Doenca {
 
-    String name;
-    int doenca_id;
+    String doenca_nome;
+    Integer doenca_ID;
 
-    public String getName() {
-        return name;
+    public String getDoenca_nome() {
+        return doenca_nome;
     }
-    public void setName(String name) {
-        this.name = name;
+
+    public void setDoenca_nome(String doenca_nome) {
+        this.doenca_nome = doenca_nome;
     }
-    public int getDoenca_id() {
-        return doenca_id;
+
+    public Integer getDoenca_ID() {
+        return doenca_ID;
     }
-    public void setDoenca_id(int doenca_id) {
-        this.doenca_id = doenca_id;
+
+    public void setDoenca_ID(Integer doenca_ID) {
+        this.doenca_ID = doenca_ID;
     }
 }
