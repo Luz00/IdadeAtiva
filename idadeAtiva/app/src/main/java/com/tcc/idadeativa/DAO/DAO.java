@@ -12,7 +12,7 @@ import com.tcc.idadeativa.objetos.Pessoa;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
-
+// teste
 public class DAO extends SQLiteOpenHelper {
 
     public DAO (Context context){
