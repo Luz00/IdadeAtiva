@@ -16,14 +16,14 @@ import java.util.List;
 public class DAO extends SQLiteOpenHelper {
 
     public DAO (Context context){
-        super(context, "banco", null, 4);
+        super(context, "banco", null, 6);
     }
 
     //RODA NA PRIMEIRA EXECUÇÃO DA APLICAÇÃO PARA CRIAR O BANCO DE DADOS
     @Override
     public void onCreate(SQLiteDatabase db) {
         // Cria a tabela pessoa
-        String sqlPessoa = "CREATE TABLE pessoa (pessoa_ID INTEGER PRIMARY KEY, pessoa_nome TEXT, pessoa_sexo TEXT, pessoa_nomeSUS TEXT, pessoa_dataNascimento DATE, pessoa_foto TEXT, pessoa_numSUS TEXT);";
+        String sqlPessoa = "CREATE TABLE pessoa (pessoa_ID INTEGER PRIMARY KEY AUTOINCREMENT, pessoa_nome TEXT, pessoa_sexo TEXT, pessoa_nomeSUS TEXT, pessoa_dataNascimento DATE, pessoa_foto TEXT, pessoa_numSUS TEXT);";
         db.execSQL(sqlPessoa);
 
         // Cria a tabela doenca
@@ -62,15 +62,16 @@ public class DAO extends SQLiteOpenHelper {
     public void inserePessoa(Pessoa pessoa){
         SQLiteDatabase db = getWritableDatabase();
         ContentValues dados = new ContentValues();
-        dados.put("nome", pessoa.getPessoa_nome());
-        dados.put("sexo", pessoa.getPessoa_sexo());
-        dados.put("nomeSUS", pessoa.getPessoa_nomeSUS());
-        dados.put("dataNascimento", pessoa.getPessoa_dataNascimento()); // resolver problema de String =/= date
-        dados.put("numSUS", pessoa.getPessoa_numSUS());
-        dados.put("foto", pessoa.getPessoa_foto());
+        dados.put("pessoa_nome", pessoa.getPessoa_nome());
+        dados.put("pessoa_sexo", pessoa.getPessoa_sexo());
+        dados.put("pessoa_nomeSUS", pessoa.getPessoa_nomeSUS());
+        dados.put("pessoa_dataNascimento", pessoa.getPessoa_dataNascimento()); // resolver problema de String =/= date
+        dados.put("pessoa_numSUS", pessoa.getPessoa_numSUS());
+        dados.put("pessoa_foto", pessoa.getPessoa_foto());
 
         db.insert("pessoa", null, dados);
     }
+
 
     @SuppressLint("Range")
     public List<Pessoa> buscaPessoa(){
