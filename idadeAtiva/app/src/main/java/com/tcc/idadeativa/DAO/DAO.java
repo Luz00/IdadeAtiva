@@ -16,26 +16,47 @@ import java.util.List;
 public class DAO extends SQLiteOpenHelper {
 
     public DAO (Context context){
-        super(context, "banco", null, 2);
+        super(context, "banco", null, 4);
     }
 
     //RODA NA PRIMEIRA EXECUÇÃO DA APLICAÇÃO PARA CRIAR O BANCO DE DADOS
     @Override
-    public void onCreate (SQLiteDatabase db){
-        String sql = "CREATE TABLE pessoa(pessoa_id Integer PRIMARY KEY, nome TEXT, sexo TEXT, nomeSUS TEXT, dataNascimento TEXT, numSUS Integer, foto String);";
-        db.execSQL(sql);
+    public void onCreate(SQLiteDatabase db) {
+        // Cria a tabela pessoa
+        String sqlPessoa = "CREATE TABLE pessoa (pessoa_ID INTEGER PRIMARY KEY, pessoa_nome TEXT, pessoa_sexo TEXT, pessoa_nomeSUS TEXT, pessoa_dataNascimento DATE, pessoa_foto TEXT, pessoa_numSUS TEXT);";
+        db.execSQL(sqlPessoa);
+
+        // Cria a tabela doenca
+        String sqlDoenca = "CREATE TABLE doenca (doenca_ID INTEGER PRIMARY KEY, doenca_nome TEXT);";
+        db.execSQL(sqlDoenca);
+
+        // Cria a tabela medicao
+        String sqlMedicao = "CREATE TABLE medicao (medicao_data DATE, medicao_valor REAL, medicao_pessoaID INTEGER, medicao_doencaID INTEGER, FOREIGN KEY (medicao_pessoaID) REFERENCES pessoa(pessoa_ID), FOREIGN KEY (medicao_doencaID) REFERENCES doenca(doenca_ID), PRIMARY KEY (medicao_data, medicao_valor, medicao_pessoaID, medicao_doencaID));";
+        db.execSQL(sqlMedicao);
+
+        // Cria a tabela pessoa_doenca
+        String sqlPessoaDoenca = "CREATE TABLE pessoa_doenca (pessoaDoenca_pessoaID INTEGER, pessoaDoenca_doencaID INTEGER, FOREIGN KEY (pessoaDoenca_pessoaID) REFERENCES pessoa(pessoa_ID), FOREIGN KEY (pessoaDoenca_doencaID) REFERENCES doenca(doenca_ID), PRIMARY KEY (pessoaDoenca_pessoaID, pessoaDoenca_doencaID));";
+        db.execSQL(sqlPessoaDoenca);
     }
+
 
     //APAGA O DATABASE EXISTENTE E CRIA OUTRO COM UMA VERSAO MAIS NOVA EM CASO DE ALTERAÇÕES
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
-        String sql = "DROP TABLE IF EXISTS pessoa;";
-        db.execSQL(sql);
+        String sqlPessoa = "DROP TABLE IF EXISTS pessoa;";
+        db.execSQL(sqlPessoa);
+
+        String sqlDoenca = "DROP TABLE IF EXISTS doenca;";
+        db.execSQL(sqlDoenca);
+
+        String sqlMedicao = "DROP TABLE IF EXISTS medicao;";
+        db.execSQL(sqlMedicao);
+
+        String sqlPessoaDoenca = "DROP TABLE IF EXISTS pessoa_doenca;";
+        db.execSQL(sqlPessoaDoenca);
+
         onCreate(db);
     }
-
-
-
 
     //METODO QUE INSERE PESSOA NO BANCO
     public void inserePessoa(Pessoa pessoa){
@@ -54,9 +75,9 @@ public class DAO extends SQLiteOpenHelper {
     @SuppressLint("Range")
     public List<Pessoa> buscaPessoa(){
         SQLiteDatabase db = getReadableDatabase();
-        String sql = "SELECT * FROM pessoa;";
+        String sqlPessoa = "SELECT * FROM pessoa;";
 
-        Cursor c = db.rawQuery(sql, null);
+        Cursor c = db.rawQuery(sqlPessoa, null);
 
         List<Pessoa> pessoas = new ArrayList<Pessoa>();
 
