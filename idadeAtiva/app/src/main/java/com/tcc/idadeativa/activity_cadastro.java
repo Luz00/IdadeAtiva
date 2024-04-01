@@ -36,14 +36,8 @@ public class activity_cadastro extends Activity {
     private static final String TAG = "activity_cadastro";
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     private static final int REQUEST_IMAGE_PICK = 2;
-
-
     private ImageView ivUser;
     private String fotoString = "";
-
-    private Uri imagePath;
-    private Bitmap imageToStore;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,6 +133,7 @@ public class activity_cadastro extends Activity {
         };
 
         /* ------------------------------------------------------------------------------------ */
+        /* CÓDIGO QUE QUANDO APERTAR O BOTÃO CONFIRMAR ELE PEGA AS INFOS DOS CAMPOS E SALVA NO BANCO */
         /* CÓDIGO QUE QUANDO APERTAR O BOTÃO CONFIRMAR ELE PEGA AS INFOS DOS CAMPOS E SALVA NO BANCO */
 
         btnConfirmar.setOnClickListener(new View.OnClickListener() {
