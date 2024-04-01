@@ -134,7 +134,6 @@ public class activity_cadastro extends Activity {
 
         /* ------------------------------------------------------------------------------------ */
         /* CÓDIGO QUE QUANDO APERTAR O BOTÃO CONFIRMAR ELE PEGA AS INFOS DOS CAMPOS E SALVA NO BANCO */
-        /* CÓDIGO QUE QUANDO APERTAR O BOTÃO CONFIRMAR ELE PEGA AS INFOS DOS CAMPOS E SALVA NO BANCO */
 
         btnConfirmar.setOnClickListener(new View.OnClickListener() {
             @Override
