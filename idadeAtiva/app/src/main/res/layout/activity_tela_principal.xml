@@ -6,6 +6,45 @@
     android:layout_height="match_parent"
     tools:context=".activity_TelaPrincipal">
 
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnSettings"
+        android:layout_width="56dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/backgroud_button_form"
+        android:drawableLeft="@drawable/ic_user_settings"
+        android:padding="15dp"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.896"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.146" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnExit"
+        android:layout_width="56dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/background_button_cancel"
+        android:drawableLeft="@drawable/ic_exit"
+        android:padding="15dp"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.146" />
+
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnHome"
         android:layout_width="137dp"
@@ -115,7 +154,7 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnFoto"
-        android:layout_width="100dp"
+        android:layout_width="103dp"
         android:layout_height="103dp"
         android:background="@drawable/back_btn_medir"
         android:drawableTop="@drawable/ic_adicionar"

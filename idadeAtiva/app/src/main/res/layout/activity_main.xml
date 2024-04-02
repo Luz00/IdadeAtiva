@@ -31,14 +31,14 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageButton
-        android:id="@+id/btnUser3"
+        android:id="@+id/btnUser2"
         android:layout_width="128dp"
         android:layout_height="128dp"
         android:layout_centerInParent="true"
         android:background="@android:color/transparent"
         android:scaleType="fitCenter"
         android:src="@drawable/user"
-        app:layout_constraintBottom_toTopOf="@+id/btnUser2"
+        app:layout_constraintBottom_toTopOf="@+id/btnUser3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -46,7 +46,7 @@
         app:layout_constraintVertical_bias="0.5" />
 
     <ImageButton
-        android:id="@+id/btnUser2"
+        android:id="@+id/btnUser3"
         android:layout_width="128dp"
         android:layout_height="128dp"
         android:layout_centerInParent="true"
@@ -57,7 +57,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnUser3"
+        app:layout_constraintTop_toBottomOf="@+id/btnUser2"
         app:layout_constraintVertical_bias="0.5" />
 
     <ImageButton
@@ -68,7 +68,7 @@
         android:background="@android:color/transparent"
         android:scaleType="fitCenter"
         android:src="@drawable/user"
-        app:layout_constraintBottom_toTopOf="@+id/btnUser2"
+        app:layout_constraintBottom_toTopOf="@+id/btnUser3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"

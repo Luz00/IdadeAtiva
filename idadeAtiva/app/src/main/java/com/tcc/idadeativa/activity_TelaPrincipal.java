@@ -15,6 +15,8 @@ public class activity_TelaPrincipal extends AppCompatActivity {
 
         AppCompatButton btnClock = findViewById(R.id.btnClock);
         AppCompatButton btnRelatorio = findViewById(R.id.btnRelatorio);
+        AppCompatButton btnExit = findViewById(R.id.btnExit);
+        AppCompatButton btnSettings = findViewById(R.id.btnSettings);
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
@@ -30,11 +32,34 @@ public class activity_TelaPrincipal extends AppCompatActivity {
             }
         };
 
+        View.OnClickListener onClickListener3 = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                abrirTelaMain();
+            }
+        };
+
+        View.OnClickListener onClickListener4 = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(activity_TelaPrincipal.this, activity_cadastro.class);
+                intent.putExtra("visibility", View.VISIBLE);
+                startActivity(intent);
+            }
+        };
+
         btnClock.setOnClickListener(onClickListener);
         btnRelatorio.setOnClickListener(onClickListener2);
+        btnExit.setOnClickListener(onClickListener3);
+        btnSettings.setOnClickListener(onClickListener4);
     }
     private void abrirTelaAlarme() {
         Intent intent = new Intent(this, activity_tela_alarme.class);
+        startActivity(intent);
+    }
+
+    private void abrirTelaMain() {
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
@@ -42,4 +67,5 @@ public class activity_TelaPrincipal extends AppCompatActivity {
         Intent intent = new Intent(this, activity_relatorio.class);
         startActivity(intent);
     }
+
 }

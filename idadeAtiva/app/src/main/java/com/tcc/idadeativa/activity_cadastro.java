@@ -1,7 +1,9 @@
 package com.tcc.idadeativa;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -20,8 +22,6 @@ import android.widget.AdapterView;
 import android.widget.Toast;
 import android.net.Uri;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
 import com.tcc.idadeativa.DAO.DAO;
@@ -52,6 +52,46 @@ public class activity_cadastro extends Activity {
         AppCompatButton btnCancelar = findViewById(R.id.btnCancelar);
         AppCompatButton btnConfirmar = findViewById(R.id.btnConfirmar);
         AppCompatButton btnFoto = findViewById(R.id.btnFoto);
+        AppCompatButton btnDrop = findViewById(R.id.btnDrop);
+
+        btnDrop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity_cadastro.this);
+                builder.setTitle("Deseja realmente excluir sua conta?");
+                builder.setMessage("Essa ação é irreversível!");
+                // Adiciona o botão "Cancelar"
+                builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Fecha o diálogo
+                        dialog.dismiss();
+                    }
+                });
+                // Adiciona o botão "Confirmar"
+                builder.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Coloque aqui o código para excluir a conta
+                        // Por enquanto, apenas exibe um Toast como exemplo
+                        Toast.makeText(activity_cadastro.this, "Conta excluída!", Toast.LENGTH_SHORT).show();
+                        // Fecha o diálogo
+                        dialog.dismiss();
+                    }
+                });
+                // Cria e exibe o diálogo
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
+
+        if (getIntent().getExtras() != null) {
+            // Verificar se há uma chave chamada "visibility"
+            int visibility = getIntent().getIntExtra("visibility", View.INVISIBLE);
+
+            // Alterar a visibilidade do botão btnDrop
+            btnDrop.setVisibility(visibility);
+        }
 
         /* CÓDIGO FOTO */
 

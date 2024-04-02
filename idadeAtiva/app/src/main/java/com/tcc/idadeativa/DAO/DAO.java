@@ -16,7 +16,7 @@ import java.util.List;
 public class DAO extends SQLiteOpenHelper {
 
     public DAO (Context context){
-        super(context, "banco", null, 6);
+        super(context, "banco", null, 8);
     }
 
     //RODA NA PRIMEIRA EXECUÇÃO DA APLICAÇÃO PARA CRIAR O BANCO DE DADOS
@@ -74,24 +74,23 @@ public class DAO extends SQLiteOpenHelper {
 
 
     @SuppressLint("Range")
-    public List<Pessoa> buscaPessoa(){
+    public List<Pessoa> buscaPessoa() {
         SQLiteDatabase db = getReadableDatabase();
         String sqlPessoa = "SELECT * FROM pessoa;";
-
         Cursor c = db.rawQuery(sqlPessoa, null);
-
         List<Pessoa> pessoas = new ArrayList<Pessoa>();
 
-        while (c.moveToNext()){
+        while (c.moveToNext()) {
             Pessoa pessoa = new Pessoa();
-            pessoa.setPessoa_nome(c.getString(c.getColumnIndex("nome")));
-            pessoa.setPessoa_sexo(c.getString(c.getColumnIndex("sexo")));
-            pessoa.setPessoa_nomeSUS(c.getString(c.getColumnIndex("nomeSUS")));
-            pessoa.setPessoa_dataNascimento(c.getString(c.getColumnIndex("dataNascimento")));
-            pessoa.setPessoa_numSUS(c.getString(c.getColumnIndex("numSUS")));
-            pessoa.setPessoa_foto(c.getString(c.getColumnIndex("foto")));
+            pessoa.setPessoa_nome(c.getString(c.getColumnIndex("pessoa_nome")));
+            pessoa.setPessoa_sexo(c.getString(c.getColumnIndex("pessoa_sexo")));
+            pessoa.setPessoa_nomeSUS(c.getString(c.getColumnIndex("pessoa_nomeSUS")));
+            pessoa.setPessoa_dataNascimento(c.getString(c.getColumnIndex("pessoa_dataNascimento")));
+            pessoa.setPessoa_numSUS(c.getString(c.getColumnIndex("pessoa_numSUS")));
+            pessoa.setPessoa_foto(c.getString(c.getColumnIndex("pessoa_foto")));
             pessoas.add(pessoa);
         }
+        c.close();
         return pessoas;
     }
 }
