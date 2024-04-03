@@ -53,6 +53,9 @@ public class activity_cadastro extends Activity {
         AppCompatButton btnConfirmar = findViewById(R.id.btnConfirmar);
         AppCompatButton btnFoto = findViewById(R.id.btnFoto);
         AppCompatButton btnDrop = findViewById(R.id.btnDrop);
+        AppCompatButton btnAtualizar = findViewById(R.id.btnAtualizar);
+
+        /* CÓDIGO QUE CRIA O POPUP DE CONFIRMAÇÃO DE EXCLUSÃO DA CONTA DE USUÁRIO */
 
         btnDrop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,15 +78,15 @@ public class activity_cadastro extends Activity {
                         // Coloque aqui o código para excluir a conta
                         // Por enquanto, apenas exibe um Toast como exemplo
                         Toast.makeText(activity_cadastro.this, "Conta excluída!", Toast.LENGTH_SHORT).show();
-                        // Fecha o diálogo
                         dialog.dismiss();
                     }
                 });
-                // Cria e exibe o diálogo
                 AlertDialog dialog = builder.create();
                 dialog.show();
             }
         });
+
+        /* ------------------------------------------------------------------------------------ */
 
         if (getIntent().getExtras() != null) {
             // Verificar se há uma chave chamada "visibility"
@@ -91,6 +94,7 @@ public class activity_cadastro extends Activity {
 
             // Alterar a visibilidade do botão btnDrop
             btnDrop.setVisibility(visibility);
+            btnAtualizar.setVisibility(visibility);
         }
 
         /* CÓDIGO FOTO */
@@ -225,13 +229,18 @@ public class activity_cadastro extends Activity {
             if (data != null && data.getData() != null) {
                 Uri selectedImageUri = data.getData();
                 try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImageUri);
-                    ivUser.setImageBitmap(bitmap);
+                    Bitmap originalBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImageUri);
 
-                    byte[] fotoemBytes;
+                    // Redimensionando a imagem para 500x500
+                    Bitmap resizedBitmap = Bitmap.createScaledBitmap(originalBitmap, 500, 500, true);
+
+                    // Definindo a imagem redimensionada no ImageView
+                    ivUser.setImageBitmap(resizedBitmap);
+
+                    // Convertendo a imagem redimensionada em uma string Base64
                     ByteArrayOutputStream streamFoto = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 70, streamFoto);
-                    fotoemBytes = streamFoto.toByteArray();
+                    resizedBitmap.compress(Bitmap.CompressFormat.PNG, 70, streamFoto);
+                    byte[] fotoemBytes = streamFoto.toByteArray();
                     fotoString = Base64.encodeToString(fotoemBytes, Base64.DEFAULT);
 
                 } catch (IOException e) {
@@ -240,4 +249,5 @@ public class activity_cadastro extends Activity {
             }
         }
     }
+
 }

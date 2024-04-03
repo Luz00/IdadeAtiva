@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         // Abrir activity_cadastro
-                        abrirActivityPrinciapal();
+                        abrirActivityPrincipal(pessoas.get(0));
                     }
                 });
 
@@ -53,16 +53,16 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
             if (pessoas.size() >= 2) {
-                    byte[] decodedString = Base64.decode(pessoas.get(1).getPessoa_foto(), Base64.DEFAULT);
-                    Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                    btnUser2.setImageBitmap(decodedByte);
-                    btnUser2.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            // Abrir activity_cadastro
-                            abrirActivityPrinciapal();
-                        }
-                    });
+                byte[] decodedString = Base64.decode(pessoas.get(1).getPessoa_foto(), Base64.DEFAULT);
+                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                btnUser2.setImageBitmap(decodedByte);
+                btnUser2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Abrir activity_cadastro
+                        abrirActivityPrincipal(pessoas.get(1));
+                    }
+                });
             } else {
                 btnUser2.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -73,16 +73,16 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
             if (pessoas.size() >= 3) {
-                    byte[] decodedString = Base64.decode(pessoas.get(2).getPessoa_foto(), Base64.DEFAULT);
-                    Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                    btnUser3.setImageBitmap(decodedByte);
-                    btnUser3.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            // Abrir activity_cadastro
-                            abrirActivityPrinciapal();
-                        }
-                    });
+                byte[] decodedString = Base64.decode(pessoas.get(2).getPessoa_foto(), Base64.DEFAULT);
+                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                btnUser3.setImageBitmap(decodedByte);
+                btnUser3.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Abrir activity_cadastro
+                        abrirActivityPrincipal(pessoas.get(2));
+                    }
+                });
             } else {
                 btnUser3.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -117,13 +117,15 @@ public class MainActivity extends AppCompatActivity {
             });
         }
     }
+
         private void abrirActivityCadastro () {
             Intent intent = new Intent(this, activity_cadastro.class);
             startActivity(intent);
         }
 
-        private void abrirActivityPrinciapal () {
+        private void abrirActivityPrincipal(Pessoa pessoa) {
             Intent intent = new Intent(this, activity_TelaPrincipal.class);
+            intent.putExtra("pessoa", pessoa);
             startActivity(intent);
         }
 }

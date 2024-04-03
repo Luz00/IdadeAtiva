@@ -1,9 +1,8 @@
 package com.tcc.idadeativa.objetos;
 
-import java.util.List;
-import java.util.Date;
+import java.io.Serializable;
 
-public class Pessoa {
+public class Pessoa implements Serializable {
 
     String pessoa_nome;
     String pessoa_sexo;
@@ -68,4 +67,5 @@ public class Pessoa {
     public void setPessoa_ID(Integer pessoa_ID) {
         this.pessoa_ID = pessoa_ID;
     }
+
 }
