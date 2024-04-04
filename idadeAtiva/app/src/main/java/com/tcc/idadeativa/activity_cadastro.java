@@ -54,6 +54,7 @@ public class activity_cadastro extends Activity {
         AppCompatButton btnFoto = findViewById(R.id.btnFoto);
         AppCompatButton btnDrop = findViewById(R.id.btnDrop);
         AppCompatButton btnAtualizar = findViewById(R.id.btnAtualizar);
+        AppCompatButton btnVoltar = findViewById(R.id.btnVoltar);
 
         /* CÓDIGO QUE CRIA O POPUP DE CONFIRMAÇÃO DE EXCLUSÃO DA CONTA DE USUÁRIO */
 
@@ -95,7 +96,10 @@ public class activity_cadastro extends Activity {
             // Alterar a visibilidade do botão btnDrop
             btnDrop.setVisibility(visibility);
             btnAtualizar.setVisibility(visibility);
+            btnVoltar.setVisibility(visibility);
         }
+
+
 
         /* CÓDIGO FOTO */
 
