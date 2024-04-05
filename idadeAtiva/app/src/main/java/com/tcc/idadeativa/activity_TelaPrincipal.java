@@ -127,10 +127,9 @@ public class activity_TelaPrincipal extends AppCompatActivity {
         View.OnClickListener onClickListener4 = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(activity_TelaPrincipal.this, activity_cadastro.class);
-                intent.putExtra("visibility", View.VISIBLE);
-                intent.putExtra("invisible", View.INVISIBLE);
-                startActivity(intent);
+                Pessoa pessoa = (Pessoa) getIntent().getSerializableExtra("pessoa");
+                abrirTelaAtualizar(pessoa);
+                visualizarCampos();
             }
         };
 
@@ -156,4 +155,16 @@ public class activity_TelaPrincipal extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void abrirTelaAtualizar(Pessoa pessoa){
+        Intent intent = new Intent(this, activity_tela_alarme.class);
+        intent.putExtra("pessoa", pessoa);
+        startActivity(intent);
+    }
+
+    private void visualizarCampos(){
+        Intent intent2 = new Intent(activity_TelaPrincipal.this, activity_cadastro.class);
+        intent2.putExtra("visibility", View.VISIBLE);
+        intent2.putExtra("invisible", View.INVISIBLE);
+        startActivity(intent2);
+    }
 }

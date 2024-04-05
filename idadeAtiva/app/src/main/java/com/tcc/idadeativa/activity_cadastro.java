@@ -95,29 +95,21 @@ public class activity_cadastro extends Activity {
         /* ------------------------------------------------------------------------------------ */
 
         if (getIntent().getExtras() != null) {
-            int visibility = getIntent().getIntExtra("visibility", View.INVISIBLE);
-            int invisible = getIntent().getIntExtra("invisible", View.VISIBLE);
-            btnDrop.setVisibility(visibility);
-            btnAtualizar.setVisibility(visibility);
-            btnVoltar.setVisibility(visibility);
-            btnCancelar.setVisibility(invisible);
-            btnConfirmar.setVisibility(invisible);
+            if (getIntent().getExtras().containsKey("visibility") && getIntent().getExtras().containsKey("invisible")) {
+                int visibility = getIntent().getIntExtra("visibility", View.INVISIBLE);
+                int invisible = getIntent().getIntExtra("invisible", View.VISIBLE);
+                btnDrop.setVisibility(visibility);
+                btnAtualizar.setVisibility(visibility);
+                btnVoltar.setVisibility(visibility);
+                btnCancelar.setVisibility(invisible);
+                btnConfirmar.setVisibility(invisible);
+            }
         }
 
         btnVoltar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!pessoas.isEmpty()) {
-                    if (pessoas.size() == 1) {
-                        abrirTelaPrincipal(pessoas.get(0));
-                    }
-                    if (pessoas.size() < 3) {
-                        abrirTelaPrincipal(pessoas.get(1));
-                    }
-                    if (pessoas.size() == 3) {
-                        abrirTelaPrincipal(pessoas.get(2));
-                    }
-                }
+                finish();
             }
         });
 
@@ -140,6 +132,7 @@ public class activity_cadastro extends Activity {
             @Override
             public void onClick(View view) {
                 abrirTelaInicial();
+                finish();
             }
         };
         btnCancelar.setOnClickListener(onClickListener);

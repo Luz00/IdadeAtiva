@@ -36,8 +36,8 @@ public class MainActivity extends AppCompatActivity {
                 btnUser1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // Abrir activity_cadastro
                         abrirActivityPrincipal(pessoas.get(0));
+                        finish();
                     }
                 });
 
@@ -45,8 +45,8 @@ public class MainActivity extends AppCompatActivity {
                 btnUser1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // Abrir activity_cadastro
                         abrirActivityCadastro();
+                        finish();
                     }
                 });
             }
@@ -57,16 +57,16 @@ public class MainActivity extends AppCompatActivity {
                 btnUser2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // Abrir activity_cadastro
                         abrirActivityPrincipal(pessoas.get(1));
+                        finish();
                     }
                 });
             } else {
                 btnUser2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // Abrir activity_cadastro
                         abrirActivityCadastro();
+                        finish();
                     }
                 });
             }
@@ -77,16 +77,16 @@ public class MainActivity extends AppCompatActivity {
                 btnUser3.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // Abrir activity_cadastro
                         abrirActivityPrincipal(pessoas.get(2));
+                        finish();
                     }
                 });
             } else {
                 btnUser3.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // Abrir activity_cadastro
                         abrirActivityCadastro();
+                        finish();
                     }
                 });
             }
@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     abrirActivityCadastro();
+                    finish();
                 }
             });
             btnUser2.setImageResource(R.drawable.user); // Defina a imagem padrão aqui
@@ -104,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     abrirActivityCadastro();
+                    finish();
                 }
             });
             btnUser3.setImageResource(R.drawable.user); // Defina a imagem padrão aqui
@@ -111,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     abrirActivityCadastro();
+                    finish();
                 }
             });
         }
