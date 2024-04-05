@@ -14,15 +14,11 @@ import java.util.List;
 
 public class activity_relatorio extends AppCompatActivity {
 
-    private DAO dao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_relatorio);
-
-        dao = new DAO(this);
-        List<Pessoa> pessoas = dao.buscaPessoa();
 
         AppCompatButton btnClock = findViewById(R.id.btnClock);
         AppCompatButton btnHome = findViewById(R.id.btnHome);
@@ -30,24 +26,16 @@ public class activity_relatorio extends AppCompatActivity {
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                abrirTelaAlarme();
+                Pessoa pessoa = (Pessoa) getIntent().getSerializableExtra("pessoa");
+                abrirTelaAlarme(pessoa);
             }
         };
 
         View.OnClickListener onClickListener2 = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!pessoas.isEmpty()) {
-                    if (pessoas.size() >= 1) {
-                        abrirTelaHome(pessoas.get(0));
-                    }
-                    else if (pessoas.size() >= 2) {
-                        abrirTelaHome(pessoas.get(1));
-                    }
-                    else if (pessoas.size() >= 3) {
-                        abrirTelaHome(pessoas.get(2));
-                    }
-                }
+                Pessoa pessoa = (Pessoa) getIntent().getSerializableExtra("pessoa");
+                abrirTelaHome(pessoa);
             }
         };
 
@@ -55,8 +43,9 @@ public class activity_relatorio extends AppCompatActivity {
         btnHome.setOnClickListener(onClickListener2);
     }
 
-    private void abrirTelaAlarme() {
-        Intent intent = new Intent(this, activity_tela_alarme.class);
+    private void abrirTelaAlarme(Pessoa pessoa) {
+        Intent intent = new Intent(this, activity_TelaPrincipal.class);
+        intent.putExtra("pessoa", pessoa);
         startActivity(intent);
     }
 

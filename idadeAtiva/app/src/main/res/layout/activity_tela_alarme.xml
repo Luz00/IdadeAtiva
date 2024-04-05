@@ -23,25 +23,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.614" />
 
-    <EditText
-        android:id="@+id/lblNumeroDias"
-        android:layout_width="110dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"
-        android:background="@drawable/backgroud_list"
-        android:ems="10"
-        android:hint="Dias:"
-        android:inputType="number"
-        android:padding="10dp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.752"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.532" />
-
     <TextView
         android:id="@+id/tvDateInicio"
         android:layout_width="310dp"
@@ -91,132 +72,209 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.103" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnClock"
-        android:layout_width="137dp"
-        android:layout_height="55dp"
-        android:background="@drawable/back_btn_left"
-        android:drawableBottom="@drawable/ic_alarm"
-        android:paddingBottom="5dp"
+    <LinearLayout
+        android:id="@+id/linearLayout5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.000">
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnHome"
-        android:layout_width="137dp"
-        android:layout_height="55dp"
-        android:background="@drawable/back_btn_meio"
-        android:drawableBottom="@drawable/ic_home"
-        android:paddingBottom="5dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnClock"
+            android:layout_width="137dp"
+            android:layout_height="55dp"
+            android:background="@drawable/back_btn_left"
+            android:drawableBottom="@drawable/ic_alarm"
+            android:paddingBottom="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnRelatorio"
-        android:layout_width="137dp"
-        android:layout_height="55dp"
-        android:background="@drawable/back_btn_right"
-        android:drawableBottom="@drawable/ic_chart"
-        android:paddingBottom="5dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnHome"
+            android:layout_width="137dp"
+            android:layout_height="55dp"
+            android:background="@drawable/back_btn_meio"
+            android:drawableBottom="@drawable/ic_home"
+            android:paddingBottom="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
 
-    <RadioGroup
-        android:id="@+id/radioGroup"
-        android:layout_width="300dp"
-        android:layout_height="50dp"
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnRelatorio"
+            android:layout_width="137dp"
+            android:layout_height="55dp"
+            android:background="@drawable/back_btn_right"
+            android:drawableBottom="@drawable/ic_chart"
+            android:paddingBottom="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.639"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.267">
+        app:layout_constraintVertical_bias="0.265">
 
-        <RadioButton
-            android:id="@+id/rd_btn_permanente"
+        <RadioGroup
+            android:id="@+id/radioGroup"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
-            android:text="Permanente"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            android:textSize="16sp"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.25"
+            app:layout_constraintHorizontal_bias="0.639"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.266" />
+            app:layout_constraintVertical_bias="0.267">
 
-        <RadioButton
-            android:id="@+id/rd_btn_temporario"
+            <RadioButton
+                android:id="@+id/rd_btn_permanente"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="Permanente"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.25"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.266" />
+
+            <RadioButton
+                android:id="@+id/rd_btn_temporario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Temporário"
+                android:layout_marginLeft="10dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.742"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.266" />
+        </RadioGroup>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.439">
+
+        <TextView
+            android:id="@+id/tvIntervalo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Temporário"
+            android:text="Intervalo:"
+            android:layout_marginRight="10dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            android:textSize="16sp"
+            android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.742"
+            app:layout_constraintHorizontal_bias="0.251"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.266" />
+            app:layout_constraintVertical_bias="0.436" />
 
-    </RadioGroup>
+        <Spinner
+            android:id="@+id/singleSelectSpinner"
+            android:layout_width="110dp"
+            android:layout_height="40dp"
+            android:background="@drawable/backgroud_list"
+            android:entries="@array/array_intervalo"
+            android:padding="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.744"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginLeft="10dp"
+            app:layout_constraintVertical_bias="0.441" />
+    </LinearLayout>
 
-    <Spinner
-        android:id="@+id/singleSelectSpinner"
-        android:layout_width="110dp"
-        android:layout_height="40dp"
-        android:background="@drawable/backgroud_list"
-        android:entries="@array/array_intervalo"
-        android:padding="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.744"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.441" />
-
-    <TextView
-        android:id="@+id/tvIntervalo"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Intervalo:"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-        android:textSize="24sp"
+        android:gravity="center"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.251"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.436" />
+        app:layout_constraintVertical_bias="0.522">
 
-    <TextView
-        android:id="@+id/tvPeriodo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Periodo:"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-        android:textSize="24sp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.277"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.526" />
+        <TextView
+            android:id="@+id/tvPeriodo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Periodo:"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textSize="24sp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.277"
+            android:layout_marginRight="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.526" />
+
+        <EditText
+            android:id="@+id/lblNumeroDias"
+            android:layout_width="110dp"
+            android:layout_height="40dp"
+            android:background="@drawable/backgroud_list"
+            android:ems="10"
+            android:hint="Dias:"
+            android:inputType="number"
+            android:layout_marginLeft="17dp"
+            android:padding="10dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.752"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.532" />
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/imageView"

@@ -1,17 +1,15 @@
 package com.tcc.idadeativa;
+
 import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Base64;
 import android.widget.ImageButton;
 import android.view.View;
-
 import com.tcc.idadeativa.DAO.DAO;
 import com.tcc.idadeativa.objetos.Pessoa;
-
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {

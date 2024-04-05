@@ -2,7 +2,6 @@ package com.tcc.idadeativa;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
-
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,16 +9,19 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.tcc.idadeativa.objetos.Pessoa;
 
 public class activity_TelaPrincipal extends AppCompatActivity {
 
     private AlertDialog alertDialog;
+    private TextView ipt_NomeSUS;
+    private TextView ipt_DataSUS;
+    private TextView ipt_SexoSUS;
+    private TextView ipt_NumeroSUS;
+    private ImageView iv_User_home;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,12 +32,14 @@ public class activity_TelaPrincipal extends AppCompatActivity {
         AppCompatButton btnRelatorio = findViewById(R.id.btnRelatorio);
         AppCompatButton btnExit = findViewById(R.id.btnExit);
         AppCompatButton btnSettings = findViewById(R.id.btnSettings);
-        TextView ipt_NomeSUS = findViewById(R.id.ipt_NomeSUS);
-        TextView ipt_DataSUS = findViewById(R.id.ipt_DataSUS);
-        TextView ipt_SexoSUS = findViewById(R.id.ipt_SexoSUS);
-        TextView ipt_NumeroSUS = findViewById(R.id.ipt_NumeroSUS);
-        ImageView iv_User_home = findViewById(R.id.iv_User_home);
+        ipt_NomeSUS = findViewById(R.id.ipt_NomeSUS);
+        ipt_DataSUS = findViewById(R.id.ipt_DataSUS);
+        ipt_SexoSUS = findViewById(R.id.ipt_SexoSUS);
+        ipt_NumeroSUS = findViewById(R.id.ipt_NumeroSUS);
+        iv_User_home = findViewById(R.id.iv_User_home);
         AppCompatButton btnMedir = findViewById(R.id.btnMedir);
+
+
 
         /*CODIGO TESTE POPUP*/
 
@@ -84,8 +88,6 @@ public class activity_TelaPrincipal extends AppCompatActivity {
             }
         });
 
-
-
         /*-------------------*/
 
         Pessoa pessoa = (Pessoa) getIntent().getSerializableExtra("pessoa");
@@ -102,14 +104,16 @@ public class activity_TelaPrincipal extends AppCompatActivity {
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                abrirTelaAlarme();
+                Pessoa pessoa = (Pessoa) getIntent().getSerializableExtra("pessoa");
+                abrirTelaAlarme(pessoa);
             }
         };
 
         View.OnClickListener onClickListener2 = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                abrirTelaRelatorio();
+                Pessoa pessoa = (Pessoa) getIntent().getSerializableExtra("pessoa");
+                abrirTelaRelatorio(pessoa);
             }
         };
 
@@ -135,8 +139,9 @@ public class activity_TelaPrincipal extends AppCompatActivity {
         btnExit.setOnClickListener(onClickListener3);
         btnSettings.setOnClickListener(onClickListener4);
     }
-    private void abrirTelaAlarme() {
+    private void abrirTelaAlarme(Pessoa pessoa) {
         Intent intent = new Intent(this, activity_tela_alarme.class);
+        intent.putExtra("pessoa", pessoa);
         startActivity(intent);
     }
 
@@ -145,8 +150,9 @@ public class activity_TelaPrincipal extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void abrirTelaRelatorio() {
-        Intent intent = new Intent(this, activity_relatorio.class);
+    private void abrirTelaRelatorio(Pessoa pessoa) {
+        Intent intent = new Intent(this, activity_tela_alarme.class);
+        intent.putExtra("pessoa", pessoa);
         startActivity(intent);
     }
 

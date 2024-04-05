@@ -2,7 +2,6 @@ package com.tcc.idadeativa;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
-
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,12 +12,8 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-
-import com.tcc.idadeativa.DAO.DAO;
 import com.tcc.idadeativa.objetos.Pessoa;
-
 import java.util.Calendar;
-import java.util.List;
 
 public class activity_tela_alarme extends AppCompatActivity {
 
@@ -28,15 +23,11 @@ public class activity_tela_alarme extends AppCompatActivity {
     private static final String TAG = "activity_cadastro";
     private TextView mDisplayDate;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
-    private DAO dao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tela_alarme);
-
-        dao = new DAO(this);
-        List<Pessoa> pessoas = dao.buscaPessoa();
 
         /* CÓDIGO QUE FAZ A LÓGICA DE DESMARCAR OS RADIOSBUTOTN E SETAR OS ELEMENTOS VISIBLE */
 
@@ -105,24 +96,16 @@ public class activity_tela_alarme extends AppCompatActivity {
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!pessoas.isEmpty()) {
-                    if (pessoas.size() >= 1) {
-                        abrirTelaHome(pessoas.get(0));
-                    }
-                    else if (pessoas.size() >= 2) {
-                        abrirTelaHome(pessoas.get(1));
-                    }
-                    else if (pessoas.size() >= 3) {
-                        abrirTelaHome(pessoas.get(2));
-                    }
-                }
+                Pessoa pessoa = (Pessoa) getIntent().getSerializableExtra("pessoa");
+                abrirTelaHome(pessoa);
             }
         };
 
         View.OnClickListener onClickListener2 = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                abrirTelaRelatorio();
+                Pessoa pessoa = (Pessoa) getIntent().getSerializableExtra("pessoa");
+                abrirTelaRelatorio(pessoa);
             }
         };
 
@@ -131,16 +114,15 @@ public class activity_tela_alarme extends AppCompatActivity {
         /* ------------------------------------------------------------------------------------ */
     }
 
-
-
     private void abrirTelaHome(Pessoa pessoa) {
         Intent intent = new Intent(this, activity_TelaPrincipal.class);
         intent.putExtra("pessoa", pessoa);
         startActivity(intent);
     }
 
-    private void abrirTelaRelatorio() {
-        Intent intent = new Intent(this, activity_relatorio.class);
+    private void abrirTelaRelatorio(Pessoa pessoa) {
+        Intent intent = new Intent(this, activity_TelaPrincipal.class);
+        intent.putExtra("pessoa", pessoa);
         startActivity(intent);
     }
 }

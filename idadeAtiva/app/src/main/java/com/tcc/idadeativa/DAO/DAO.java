@@ -6,17 +6,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
 import com.tcc.idadeativa.objetos.Pessoa;
-
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
-// teste
+
 public class DAO extends SQLiteOpenHelper {
 
     public DAO (Context context){
-        super(context, "banco", null, 17);
+        super(context, "banco", null, 19);
     }
 
     //RODA NA PRIMEIRA EXECUÇÃO DA APLICAÇÃO PARA CRIAR O BANCO DE DADOS
@@ -72,6 +69,7 @@ public class DAO extends SQLiteOpenHelper {
         db.insert("pessoa", null, dados);
     }
 
+    // Dentro da classe DAO
 
     @SuppressLint("Range")
     public List<Pessoa> buscaPessoa() {
