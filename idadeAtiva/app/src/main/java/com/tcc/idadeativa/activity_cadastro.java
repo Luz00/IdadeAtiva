@@ -109,7 +109,6 @@ public class activity_cadastro extends Activity {
         btnVoltar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
             }
         });
 
@@ -132,7 +131,6 @@ public class activity_cadastro extends Activity {
             @Override
             public void onClick(View view) {
                 abrirTelaInicial();
-                finish();
             }
         };
         btnCancelar.setOnClickListener(onClickListener);
@@ -225,12 +223,6 @@ public class activity_cadastro extends Activity {
             }
         });
         /* ------------------------------------------------------------------------------------ */
-    }
-
-    private void abrirTelaPrincipal(Pessoa pessoa){
-        Intent intent = new Intent(this, activity_TelaPrincipal.class);
-        intent.putExtra("pessoa", pessoa);
-        startActivity(intent);
     }
 
     private void abrirTelaInicial() {

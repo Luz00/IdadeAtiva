@@ -44,7 +44,7 @@ public class activity_relatorio extends AppCompatActivity {
     }
 
     private void abrirTelaAlarme(Pessoa pessoa) {
-        Intent intent = new Intent(this, activity_TelaPrincipal.class);
+        Intent intent = new Intent(this, activity_tela_alarme.class);
         intent.putExtra("pessoa", pessoa);
         startActivity(intent);
     }

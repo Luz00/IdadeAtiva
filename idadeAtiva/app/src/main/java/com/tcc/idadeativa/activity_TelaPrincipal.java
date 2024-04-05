@@ -150,13 +150,13 @@ public class activity_TelaPrincipal extends AppCompatActivity {
     }
 
     private void abrirTelaRelatorio(Pessoa pessoa) {
-        Intent intent = new Intent(this, activity_tela_alarme.class);
+        Intent intent = new Intent(this, activity_relatorio.class);
         intent.putExtra("pessoa", pessoa);
         startActivity(intent);
     }
 
     private void abrirTelaAtualizar(Pessoa pessoa){
-        Intent intent = new Intent(this, activity_tela_alarme.class);
+        Intent intent = new Intent(this, activity_cadastro.class);
         intent.putExtra("pessoa", pessoa);
         startActivity(intent);
     }
