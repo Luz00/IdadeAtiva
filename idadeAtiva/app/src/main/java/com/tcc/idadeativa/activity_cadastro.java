@@ -30,6 +30,7 @@ import com.tcc.idadeativa.objetos.Pessoa;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.List;
 
 public class activity_cadastro extends Activity {
 
@@ -38,6 +39,7 @@ public class activity_cadastro extends Activity {
     private static final int REQUEST_IMAGE_PICK = 2;
     private ImageView ivUser;
     private String fotoString = "";
+    private DAO dao;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +57,9 @@ public class activity_cadastro extends Activity {
         AppCompatButton btnDrop = findViewById(R.id.btnDrop);
         AppCompatButton btnAtualizar = findViewById(R.id.btnAtualizar);
         AppCompatButton btnVoltar = findViewById(R.id.btnVoltar);
+
+        dao = new DAO(this);
+        List<Pessoa> pessoas = dao.buscaPessoa();
 
         /* CÓDIGO QUE CRIA O POPUP DE CONFIRMAÇÃO DE EXCLUSÃO DA CONTA DE USUÁRIO */
 
@@ -90,16 +95,31 @@ public class activity_cadastro extends Activity {
         /* ------------------------------------------------------------------------------------ */
 
         if (getIntent().getExtras() != null) {
-            // Verificar se há uma chave chamada "visibility"
             int visibility = getIntent().getIntExtra("visibility", View.INVISIBLE);
-
-            // Alterar a visibilidade do botão btnDrop
+            int invisible = getIntent().getIntExtra("invisible", View.VISIBLE);
             btnDrop.setVisibility(visibility);
             btnAtualizar.setVisibility(visibility);
             btnVoltar.setVisibility(visibility);
+            btnCancelar.setVisibility(invisible);
+            btnConfirmar.setVisibility(invisible);
         }
 
-
+        btnVoltar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!pessoas.isEmpty()) {
+                    if (pessoas.size() == 1) {
+                        abrirTelaPrincipal(pessoas.get(0));
+                    }
+                    if (pessoas.size() < 3) {
+                        abrirTelaPrincipal(pessoas.get(1));
+                    }
+                    if (pessoas.size() == 3) {
+                        abrirTelaPrincipal(pessoas.get(2));
+                    }
+                }
+            }
+        });
 
         /* CÓDIGO FOTO */
 
@@ -214,6 +234,12 @@ public class activity_cadastro extends Activity {
         /* ------------------------------------------------------------------------------------ */
     }
 
+    private void abrirTelaPrincipal(Pessoa pessoa){
+        Intent intent = new Intent(this, activity_TelaPrincipal.class);
+        intent.putExtra("pessoa", pessoa);
+        startActivity(intent);
+    }
+
     private void abrirTelaInicial() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
@@ -221,7 +247,6 @@ public class activity_cadastro extends Activity {
 
     private void escolherFonteDaFoto() {
         Intent escolherFotoIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
         startActivityForResult(escolherFotoIntent, REQUEST_IMAGE_PICK);
     }
 
@@ -234,19 +259,12 @@ public class activity_cadastro extends Activity {
                 Uri selectedImageUri = data.getData();
                 try {
                     Bitmap originalBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImageUri);
-
-                    // Redimensionando a imagem para 500x500
                     Bitmap resizedBitmap = Bitmap.createScaledBitmap(originalBitmap, 500, 500, true);
-
-                    // Definindo a imagem redimensionada no ImageView
                     ivUser.setImageBitmap(resizedBitmap);
-
-                    // Convertendo a imagem redimensionada em uma string Base64
                     ByteArrayOutputStream streamFoto = new ByteArrayOutputStream();
                     resizedBitmap.compress(Bitmap.CompressFormat.PNG, 70, streamFoto);
                     byte[] fotoemBytes = streamFoto.toByteArray();
                     fotoString = Base64.encodeToString(fotoemBytes, Base64.DEFAULT);
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

@@ -115,34 +115,49 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.733" />
 
-    <TextView
-        android:id="@+id/tvDate"
-        android:layout_width="190dp"
-        android:layout_height="40dp"
-        android:background="@drawable/backgroud_input"
-        android:hint="Data de Nascimento:"
-        android:padding="10dp"
-        android:textSize="18sp"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.153"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.807" />
+        app:layout_constraintVertical_bias="0.806">
 
-    <Spinner
-        android:id="@+id/singleSelectSpinner"
-        android:layout_width="110dp"
-        android:layout_height="40dp"
-        android:background="@drawable/backgroud_input"
-        android:entries="@array/array_sexo"
-        android:padding="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.897"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.807" />
+        <TextView
+            android:id="@+id/tvDate"
+            android:layout_width="187dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="3dp"
+            android:background="@drawable/backgroud_input"
+            android:hint="Data de Nascimento:"
+            android:padding="10dp"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.153"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.807" />
+
+        <Spinner
+            android:id="@+id/singleSelectSpinner"
+            android:layout_width="120dp"
+            android:layout_height="40dp"
+            android:background="@drawable/backgroud_input"
+            android:entries="@array/array_sexo"
+            android:padding="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.897"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.807" />
+
+    </LinearLayout>
 
     <ListView
         android:id="@+id/multiSelectListView"
@@ -177,44 +192,110 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.882" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnCancelar"
-        android:layout_width="139dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"
-        android:background="@drawable/background_button_cancel"
-        android:drawableLeft="@drawable/ic_cancel"
-        android:padding="15dp"
-        android:text="CANCELAR"
-        android:textColor="@color/white"
-        android:textSize="14sp"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.11"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.975" />
+        app:layout_constraintVertical_bias="0.976">
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnVoltar"
-        android:layout_width="139dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"
-        android:background="@drawable/background_button_cancel"
-        android:drawableLeft="@drawable/ic_voltar"
-        android:padding="15dp"
-        android:text="VOLTAR"
-        android:textColor="@color/white"
-        android:visibility="invisible"
-        android:textSize="14sp"
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnCancelar"
+            android:layout_width="139dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/background_button_cancel"
+            android:drawableLeft="@drawable/ic_cancel"
+            android:padding="15dp"
+            android:text="CANCELAR"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.11"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.975" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnConfirmar"
+            android:layout_width="139dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/backgrond_button_proximo"
+            android:drawableLeft="@drawable/ic_confirm"
+            android:padding="15dp"
+            android:text="CONFIRMAR"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.346"
+            app:layout_constraintStart_toEndOf="@+id/btnCancelar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.975" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.11"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.975" />
+        app:layout_constraintVertical_bias="0.976">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnVoltar"
+            android:layout_width="139dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/background_button_cancel"
+            android:drawableLeft="@drawable/ic_voltar"
+            android:padding="15dp"
+            android:text="VOLTAR"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.11"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.975" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnAtualizar"
+            android:layout_width="139dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/backgroud_button_form"
+            android:drawableLeft="@drawable/ic_update"
+            android:padding="15dp"
+            android:text="ATUALIZAR"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.346"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.975" />
+
+    </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnDrop"
@@ -234,44 +315,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.021" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnConfirmar"
-        android:layout_width="139dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"
-        android:background="@drawable/backgrond_button_proximo"
-        android:drawableLeft="@drawable/ic_confirm"
-        android:padding="15dp"
-        android:text="CONFIRMAR"
-        android:textColor="@color/white"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.346"
-        app:layout_constraintStart_toEndOf="@+id/btnCancelar"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.975" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnAtualizar"
-        android:layout_width="139dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"
-        android:background="@drawable/backgroud_button_form"
-        android:drawableLeft="@drawable/ic_update"
-        android:padding="15dp"
-        android:text="ATUALIZAR"
-        android:textColor="@color/white"
-        android:textSize="14sp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.346"
-        app:layout_constraintStart_toEndOf="@+id/btnCancelar"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.975" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -16,7 +16,7 @@ import java.util.List;
 public class DAO extends SQLiteOpenHelper {
 
     public DAO (Context context){
-        super(context, "banco", null, 16);
+        super(context, "banco", null, 17);
     }
 
     //RODA NA PRIMEIRA EXECUÇÃO DA APLICAÇÃO PARA CRIAR O BANCO DE DADOS
