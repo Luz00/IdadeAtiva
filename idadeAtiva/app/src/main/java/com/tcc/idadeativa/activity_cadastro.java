@@ -29,7 +29,9 @@ import com.tcc.idadeativa.objetos.Pessoa;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 public class activity_cadastro extends Activity {
@@ -40,6 +42,7 @@ public class activity_cadastro extends Activity {
     private ImageView ivUser;
     private String fotoString = "";
     private DAO dao;
+    private Pessoa pessoa;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -154,12 +157,25 @@ public class activity_cadastro extends Activity {
                 android.R.layout.simple_list_item_multiple_choice
         );
         multiSelectListView.setAdapter(listViewAdapter);
-        multiSelectListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, android.view.View view, int position, long id) {
-                // Lógica para manipular seleções no ListView
-            }
-        });
+//        final Pessoa pessoa = new Pessoa();
+//        multiSelectListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                // Criar uma lista para armazenar as doenças selecionadas
+//                List<String> selectedItems = new ArrayList<>();
+//
+//                // Iterar sobre todos os itens do ListView
+//                for (int i = 0; i < parent.getCount(); i++) {
+//                    // Verificar se o item na posição atual está marcado como selecionado
+//                    if (multiSelectListView.isItemChecked(i)) {
+//                        // Se estiver selecionado, adicionar o texto do item à lista de itens selecionados
+//                        selectedItems.add(multiSelectListView.getItemAtPosition(i).toString());
+//                    }
+//                }
+//                // Definir as doenças selecionadas na instância de Pessoa
+//                pessoa.setPessoa_doenca(selectedItems);
+//            }
+//        });
         /* ------------------------------------------------------------------------------------ */
 
         /* CÓDIGO QUE CRIA JANELA PARA DATA DE NASCIMENTO E SALVA NA TEXTVIEW */
@@ -208,6 +224,12 @@ public class activity_cadastro extends Activity {
                     pessoa.setPessoa_nomeSUS(lblNomeSus.getText().toString());
                     pessoa.setPessoa_numSUS(lblNumeroCartao.getText().toString());
                     pessoa.setPessoa_foto(fotoString);
+//                    List<String> doencasSelecionadas = pessoa.getPessoa_doenca();
+//                    StringBuilder doencasString = new StringBuilder();
+//                    for (String doenca : doencasSelecionadas) {
+//                        doencasString.append(doenca).append(", ");
+//                    }
+//                    pessoa.setPessoa_doenca(Collections.singletonList(doencasString.toString()));
                     dao.inserePessoa(pessoa);
                     dao.close();
 
