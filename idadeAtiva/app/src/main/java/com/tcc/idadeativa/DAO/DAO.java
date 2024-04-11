@@ -8,18 +8,20 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.tcc.idadeativa.objetos.Pessoa;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class DAO extends SQLiteOpenHelper {
 
     public DAO (Context context){
-        super(context, "banco", null, 19);
+        super(context, "banco", null, 29);
     }
 
     //RODA NA PRIMEIRA EXECUÇÃO DA APLICAÇÃO PARA CRIAR O BANCO DE DADOS
     @Override
     public void onCreate(SQLiteDatabase db) {
         // Cria a tabela pessoa
+        //String sqlPessoa = "CREATE TABLE pessoa (pessoa_ID INTEGER PRIMARY KEY AUTOINCREMENT, pessoa_nome TEXT, pessoa_sexo TEXT, pessoa_nomeSUS TEXT, pessoa_dataNascimento DATE, pessoa_foto TEXT, pessoa_numSUS TEXT, doenca_pessoa TEXT);";
         String sqlPessoa = "CREATE TABLE pessoa (pessoa_ID INTEGER PRIMARY KEY AUTOINCREMENT, pessoa_nome TEXT, pessoa_sexo TEXT, pessoa_nomeSUS TEXT, pessoa_dataNascimento DATE, pessoa_foto TEXT, pessoa_numSUS TEXT);";
         db.execSQL(sqlPessoa);
 
@@ -65,6 +67,7 @@ public class DAO extends SQLiteOpenHelper {
         dados.put("pessoa_dataNascimento", pessoa.getPessoa_dataNascimento()); // resolver problema de String =/= date
         dados.put("pessoa_numSUS", pessoa.getPessoa_numSUS());
         dados.put("pessoa_foto", pessoa.getPessoa_foto());
+        //dados.put("doenca_pessoa", pessoa.getPessoa_doenca().toString());
 
         db.insert("pessoa", null, dados);
     }
@@ -86,6 +89,7 @@ public class DAO extends SQLiteOpenHelper {
             pessoa.setPessoa_dataNascimento(c.getString(c.getColumnIndex("pessoa_dataNascimento")));
             pessoa.setPessoa_numSUS(c.getString(c.getColumnIndex("pessoa_numSUS")));
             pessoa.setPessoa_foto(c.getString(c.getColumnIndex("pessoa_foto")));
+            //pessoa.setPessoa_doenca(Collections.singletonList(c.getString(c.getColumnIndex("doenca_pessoa"))));
             pessoas.add(pessoa);
         }
         c.close();

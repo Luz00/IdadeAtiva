@@ -1,6 +1,7 @@
 package com.tcc.idadeativa.objetos;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Pessoa implements Serializable {
 
@@ -11,11 +12,17 @@ public class Pessoa implements Serializable {
     String pessoa_foto;
     String pessoa_numSUS;
     Integer pessoa_ID;
-
+//    List<String> doenca_pessoa;
+//
+//    public List<String> getPessoa_doenca() {
+//        return doenca_pessoa;
+//    }
+//    public void setPessoa_doenca(List<String> pessoa_doenca) {
+//        this.doenca_pessoa = pessoa_doenca;
+//    }
     public String getPessoa_nome() {
         return pessoa_nome;
     }
-
     public void setPessoa_nome(String pessoa_nome) {
         this.pessoa_nome = pessoa_nome;
     }
