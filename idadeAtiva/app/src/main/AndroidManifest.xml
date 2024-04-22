@@ -20,6 +20,9 @@
         android:theme="@style/Theme.IdadeAtiva"
         tools:targetApi="31">
         <activity
+            android:name=".activity_atualizacao"
+            android:exported="false" />
+        <activity
             android:name=".activity_relatorio"
             android:exported="false" />
         <activity

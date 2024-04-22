@@ -1,52 +1,51 @@
 package com.tcc.idadeativa;
 
-import android.app.Activity;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 import android.widget.ListView;
-import android.widget.AdapterView;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
-import android.net.Uri;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatButton;
 import com.tcc.idadeativa.DAO.DAO;
 import com.tcc.idadeativa.objetos.Pessoa;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 
-public class activity_cadastro extends Activity {
+public class activity_atualizacao extends AppCompatActivity {
 
-    private static final String TAG = "activity_cadastro";
+    private static final String TAG = "activity_atualizacao";
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     private static final int REQUEST_IMAGE_PICK = 2;
     private ImageView ivUser;
     private String fotoString = "";
     private DAO dao;
-    private Pessoa pessoa;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cadastro);
+        setContentView(R.layout.activity_atualizacao);
 
         EditText lblNome = findViewById(R.id.lblNome);
         EditText lblNomeSus = findViewById(R.id.lblNomeSus);
@@ -54,16 +53,35 @@ public class activity_cadastro extends Activity {
         ListView multiSelectListView = findViewById(R.id.multiSelectListView);
         TextView mDisplayDate = findViewById(R.id.tvDate);
         EditText lblNumeroCartao = findViewById(R.id.lblNumeroCartao);
-        AppCompatButton btnCancelar = findViewById(R.id.btnCancelar);
-        AppCompatButton btnConfirmar = findViewById(R.id.btnConfirmar);
         AppCompatButton btnFoto = findViewById(R.id.btnFoto);
+        AppCompatButton btnDrop = findViewById(R.id.btnDrop);
+        AppCompatButton btnAtualizar = findViewById(R.id.btnAtualizar);
+        AppCompatButton btnVoltar = findViewById(R.id.btnVoltar);
+        ivUser = findViewById(R.id.iv_User);
 
         dao = new DAO(this);
         List<Pessoa> pessoas = dao.buscaPessoa();
 
-        /* CÓDIGO FOTO */
+        /*CÓDIGO PARA SETAR OS VALORES DO USUÁRIO NOS CAMPOS*/
 
-        ivUser = findViewById(R.id.iv_User);
+        Pessoa pessoa = (Pessoa) getIntent().getSerializableExtra("pessoa");
+
+        if (pessoa != null) {
+            // Preencher os campos com os dados da pessoa
+            lblNome.setText(pessoa.getPessoa_nome());
+            lblNomeSus.setText(pessoa.getPessoa_nomeSUS());
+            mDisplayDate.setText(pessoa.getPessoa_dataNascimento());
+            lblNumeroCartao.setText(pessoa.getPessoa_numSUS());
+
+            byte[] decodedString = Base64.decode(pessoa.getPessoa_foto(), Base64.DEFAULT);
+            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            ivUser.setImageBitmap(decodedByte);
+
+        }
+
+        /*--------------------------------------------------------------------------------*/
+
+        /* AÇÃO DO BOTÃO QUE ABRE A GALERIA PARA ESCOLHER FOTO */
 
         btnFoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,15 +92,35 @@ public class activity_cadastro extends Activity {
 
         /* ------------------------------------------------------------------------------------ */
 
-        /* CÓDIGO QUE VOLTA PARA A TELA INICIAL SE APERTAR O BOTAO CANCELAR */
+        /* CÓDIGO QUE CRIA O POPUP DE CONFIRMAÇÃO DE EXCLUSÃO DA CONTA DE USUÁRIO */
 
-        View.OnClickListener onClickListener = new View.OnClickListener() {
+        btnDrop.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                abrirTelaInicial();
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity_atualizacao.this);
+                builder.setTitle("Deseja realmente excluir sua conta?");
+                builder.setMessage("Essa ação é irreversível!");
+                // Adiciona o botão "Cancelar"
+                builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Fecha o diálogo
+                        dialog.dismiss();
+                    }
+                });
+                // Adiciona o botão "Confirmar"
+                builder.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Excluir a conta do usuário
+
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
-        };
-        btnCancelar.setOnClickListener(onClickListener);
+        });
+
         /* ------------------------------------------------------------------------------------ */
 
         /* CÓDIGO QUE CRIA O SPINNER COM AS OPÇÕES E TAMBÉM O LISTVIEW */
@@ -135,7 +173,7 @@ public class activity_cadastro extends Activity {
                 int dia = cal.get(Calendar.DAY_OF_MONTH);
 
                 DatePickerDialog dialog = new DatePickerDialog(
-                        activity_cadastro.this,
+                        activity_atualizacao.this,
                         android.R.style.Theme_DeviceDefault_Dialog,
                         mDateSetListener,
                         dia, mes, ano);
@@ -154,47 +192,20 @@ public class activity_cadastro extends Activity {
         };
 
         /* ------------------------------------------------------------------------------------ */
-        /* CÓDIGO QUE QUANDO APERTAR O BOTÃO CONFIRMAR ELE PEGA AS INFOS DOS CAMPOS E SALVA NO BANCO */
 
-        btnConfirmar.setOnClickListener(new View.OnClickListener() {
+        btnVoltar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (!(lblNome.getText().toString().equals("") || singleSelectSpinner.getSelectedItem().equals("") || mDisplayDate.getText().toString().equals("") || lblNomeSus.getText().toString().equals("") || lblNumeroCartao.getText().toString().equals(""))) {
-                    DAO dao = new DAO(getApplicationContext());
-                    Pessoa pessoa = new Pessoa();
-                    pessoa.setPessoa_nome(lblNome.getText().toString());
-                    String sexoSelecionado = singleSelectSpinner.getSelectedItem().toString();
-                    pessoa.setPessoa_sexo(sexoSelecionado);
-                    pessoa.setPessoa_dataNascimento(mDisplayDate.getText().toString());
-                    pessoa.setPessoa_nomeSUS(lblNomeSus.getText().toString());
-                    pessoa.setPessoa_numSUS(lblNumeroCartao.getText().toString());
-                    pessoa.setPessoa_foto(fotoString);
-//                    List<String> doencasSelecionadas = pessoa.getPessoa_doenca();
-//                    StringBuilder doencasString = new StringBuilder();
-//                    for (String doenca : doencasSelecionadas) {
-//                        doencasString.append(doenca).append(", ");
-//                    }
-//                    pessoa.setPessoa_doenca(Collections.singletonList(doencasString.toString()));
-                    dao.inserePessoa(pessoa);
-                    dao.close();
-
-                    lblNome.setText("");
-                    mDisplayDate.setText("");
-                    lblNomeSus.setText("");
-                    lblNumeroCartao.setText("");
-
-                    Toast.makeText(getApplicationContext(), "Usuário cadastrado com sucesso!", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getApplicationContext(), "Por favor preencha todos os campos!", Toast.LENGTH_SHORT).show();
-                }
+                Pessoa pessoa = (Pessoa) getIntent().getSerializableExtra("pessoa");
+                abrirTelaPrincipal(pessoa);
             }
         });
-        /* ------------------------------------------------------------------------------------ */
-    }
 
-    private void abrirTelaInicial() {
-        Intent intent = new Intent(this, MainActivity.class);
+
+    }
+    private void abrirTelaPrincipal(Pessoa pessoa) {
+        Intent intent = new Intent(this, activity_TelaPrincipal.class);
+        intent.putExtra("pessoa", pessoa);
         startActivity(intent);
     }
 
@@ -224,5 +235,4 @@ public class activity_cadastro extends Activity {
             }
         }
     }
-
 }

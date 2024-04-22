@@ -42,7 +42,7 @@ public class activity_TelaPrincipal extends AppCompatActivity {
 
 
 
-        /*CODIGO TESTE POPUP*/
+        /*CODIGO CHAMA O POP-UP DA DIABETES*/
 
         btnMedir.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,7 +130,6 @@ public class activity_TelaPrincipal extends AppCompatActivity {
             public void onClick(View view) {
                 Pessoa pessoa = (Pessoa) getIntent().getSerializableExtra("pessoa");
                 abrirTelaAtualizar(pessoa);
-                visualizarCampos();
             }
         };
 
@@ -157,15 +156,8 @@ public class activity_TelaPrincipal extends AppCompatActivity {
     }
 
     private void abrirTelaAtualizar(Pessoa pessoa){
-        Intent intent = new Intent(this, activity_cadastro.class);
+        Intent intent = new Intent(this, activity_atualizacao.class);
         intent.putExtra("pessoa", pessoa);
         startActivity(intent);
-    }
-
-    private void visualizarCampos(){
-        Intent intent2 = new Intent(activity_TelaPrincipal.this, activity_cadastro.class);
-        intent2.putExtra("visibility", View.VISIBLE);
-        intent2.putExtra("invisible", View.INVISIBLE);
-        startActivity(intent2);
     }
 }
