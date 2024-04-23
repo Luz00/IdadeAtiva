@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.view.View;
 import android.widget.DatePicker;
@@ -60,6 +62,30 @@ public class activity_cadastro extends Activity {
 
         dao = new DAO(this);
         List<Pessoa> pessoas = dao.buscaPessoa();
+
+        lblNumeroCartao.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Não é necessário implementar nada aqui
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Não é necessário implementar nada aqui
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String text = s.toString();
+                if (text.length() > 15) {
+                    // Se o texto for maior que 15 caracteres, remove os caracteres extras
+                    lblNumeroCartao.setText(text.substring(0, 15));
+                    lblNumeroCartao.setSelection(15); // Move o cursor para o final do texto
+                }
+            }
+        });
+
+
 
         /* CÓDIGO FOTO */
 

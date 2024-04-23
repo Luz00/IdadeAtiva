@@ -7,12 +7,12 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.tcc.idadeativa.objetos.Pessoa;
 
 public class activity_TelaPrincipal extends AppCompatActivity {
@@ -39,8 +39,6 @@ public class activity_TelaPrincipal extends AppCompatActivity {
         ipt_NumeroSUS = findViewById(R.id.ipt_NumeroSUS);
         iv_User_home = findViewById(R.id.iv_User_home);
         AppCompatButton btnMedir = findViewById(R.id.btnMedir);
-
-
 
         /*CODIGO CHAMA O POP-UP DA DIABETES*/
 
@@ -89,18 +87,35 @@ public class activity_TelaPrincipal extends AppCompatActivity {
             }
         });
 
-        /*-------------------*/
+        /*-----------------------------------------------------------------------------------------*/
+
+        /*CÓDIGO QUE PEGA AS INFORMAÇÕES DO USUÁRIO E SETA NOS CAMPOS DO CARTÃO SUS*/
 
         Pessoa pessoa = (Pessoa) getIntent().getSerializableExtra("pessoa");
 
         ipt_NomeSUS.setText(pessoa.getPessoa_nomeSUS());
         ipt_DataSUS.setText(pessoa.getPessoa_dataNascimento());
         ipt_SexoSUS.setText(pessoa.getPessoa_sexo());
-        ipt_NumeroSUS.setText(pessoa.getPessoa_numSUS());
 
         byte[] decodedString = Base64.decode(pessoa.getPessoa_foto(), Base64.DEFAULT);
         Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
         iv_User_home.setImageBitmap(decodedByte);
+
+        String numeroSUS = pessoa.getPessoa_numSUS();
+
+        // Verifica se o número SUS é válido e possui 15 dígitos
+        if (!TextUtils.isEmpty(numeroSUS) && numeroSUS.length() == 15) {
+            // Formata o número SUS conforme especificação
+            String formattedNumeroSUS = formatarNumeroSUS(numeroSUS);
+
+            // Define o número SUS formatado no TextView ipt_NumeroSUS
+            ipt_NumeroSUS.setText(formattedNumeroSUS);
+        } else {
+            // Se o número SUS não for válido, define o texto original
+            ipt_NumeroSUS.setText(numeroSUS);
+        }
+
+        /*-----------------------------------------------------------------------------------------*/
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
@@ -159,5 +174,13 @@ public class activity_TelaPrincipal extends AppCompatActivity {
         Intent intent = new Intent(this, activity_atualizacao.class);
         intent.putExtra("pessoa", pessoa);
         startActivity(intent);
+    }
+
+    private String formatarNumeroSUS(String numeroSUS) {
+        // Formata o número SUS de acordo com a especificação
+        return numeroSUS.substring(0, 3) + " " +
+                numeroSUS.substring(3, 7) + " " +
+                numeroSUS.substring(7, 11) + " " +
+                numeroSUS.substring(11);
     }
 }
