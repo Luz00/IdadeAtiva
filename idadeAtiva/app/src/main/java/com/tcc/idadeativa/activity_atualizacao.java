@@ -60,7 +60,6 @@ public class activity_atualizacao extends AppCompatActivity {
         ivUser = findViewById(R.id.iv_User);
 
         dao = new DAO(this);
-        List<Pessoa> pessoas = dao.buscaPessoa();
 
         /*CÓDIGO PARA SETAR OS VALORES DO USUÁRIO NOS CAMPOS*/
 

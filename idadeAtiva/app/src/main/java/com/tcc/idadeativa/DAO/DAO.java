@@ -14,7 +14,7 @@ import java.util.List;
 public class DAO extends SQLiteOpenHelper {
 
     public DAO (Context context){
-        super(context, "banco", null, 36);
+        super(context, "banco", null, 45);
     }
 
     //RODA NA PRIMEIRA EXECUÇÃO DA APLICAÇÃO PARA CRIAR O BANCO DE DADOS
@@ -36,6 +36,9 @@ public class DAO extends SQLiteOpenHelper {
         // Cria a tabela pessoa_doenca
         String sqlPessoaDoenca = "CREATE TABLE pessoa_doenca (pessoaDoenca_pessoaID INTEGER, pessoaDoenca_doencaID INTEGER, FOREIGN KEY (pessoaDoenca_pessoaID) REFERENCES pessoa(pessoa_ID), FOREIGN KEY (pessoaDoenca_doencaID) REFERENCES doenca(doenca_ID), PRIMARY KEY (pessoaDoenca_pessoaID, pessoaDoenca_doencaID));";
         db.execSQL(sqlPessoaDoenca);
+
+        String sqlCriaDoenca = "INSERT INTO doenca (doenca_ID, doenca_nome) VALUES (1, 'Arritimia'), (2, 'Depressão'), (3, 'Diabetes'), (4, 'Hipertensão'),  (5, 'Hipotensão');";
+        db.execSQL(sqlCriaDoenca);
     }
 
 
@@ -59,19 +62,20 @@ public class DAO extends SQLiteOpenHelper {
 
 
     //METODO QUE INSERE PESSOA NO BANCO
-    public void inserePessoa(Pessoa pessoa){
+    public long inserePessoa(Pessoa pessoa) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues dados = new ContentValues();
         dados.put("pessoa_nome", pessoa.getPessoa_nome());
         dados.put("pessoa_sexo", pessoa.getPessoa_sexo());
         dados.put("pessoa_nomeSUS", pessoa.getPessoa_nomeSUS());
-        dados.put("pessoa_dataNascimento", pessoa.getPessoa_dataNascimento()); // resolver problema de String =/= date
+        dados.put("pessoa_dataNascimento", pessoa.getPessoa_dataNascimento());
         dados.put("pessoa_numSUS", pessoa.getPessoa_numSUS());
         dados.put("pessoa_foto", pessoa.getPessoa_foto());
-        //dados.put("doenca_pessoa", pessoa.getPessoa_doenca().toString());
-
-        db.insert("pessoa", null, dados);
+        long idUsuario = db.insert("pessoa", null, dados);
+        db.close(); // Não se esqueça de fechar o banco de dados após a inserção
+        return idUsuario;
     }
+
 
     // Dentro da classe DAO
 
@@ -84,16 +88,62 @@ public class DAO extends SQLiteOpenHelper {
 
         while (c.moveToNext()) {
             Pessoa pessoa = new Pessoa();
+            pessoa.setPessoa_ID(Integer.valueOf(c.getString(c.getColumnIndex("pessoa_ID"))));
             pessoa.setPessoa_nome(c.getString(c.getColumnIndex("pessoa_nome")));
             pessoa.setPessoa_sexo(c.getString(c.getColumnIndex("pessoa_sexo")));
             pessoa.setPessoa_nomeSUS(c.getString(c.getColumnIndex("pessoa_nomeSUS")));
             pessoa.setPessoa_dataNascimento(c.getString(c.getColumnIndex("pessoa_dataNascimento")));
             pessoa.setPessoa_numSUS(c.getString(c.getColumnIndex("pessoa_numSUS")));
             pessoa.setPessoa_foto(c.getString(c.getColumnIndex("pessoa_foto")));
-            //pessoa.setPessoa_doenca(Collections.singletonList(c.getString(c.getColumnIndex("doenca_pessoa"))));
             pessoas.add(pessoa);
         }
         c.close();
         return pessoas;
+    }
+    @SuppressLint("Range")
+    public List<String> buscarNomesDoencas() {
+        List<String> nomesDoencas = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+
+        String[] colunas = {"doenca_nome"};
+        Cursor cursor = db.query("doenca", colunas, null, null, null, null, null);
+
+        while (cursor.moveToNext()) {
+            String nomeDoenca = cursor.getString(cursor.getColumnIndex("doenca_nome"));
+            nomesDoencas.add(nomeDoenca);
+        }
+        cursor.close();
+        db.close();
+        return nomesDoencas;
+    }
+
+    public void inserePessoaDoenca(int idUsuario, int idDoenca) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("pessoaDoenca_pessoaID", idUsuario);
+        values.put("pessoaDoenca_doencaID", idDoenca);
+
+        db.insert("pessoa_doenca", null, values);
+        db.close();
+    }
+
+    @SuppressLint("Range")
+    public List<String> buscarDoencasDoUsuario(int idUsuario) {
+        List<String> nomesDoencas = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+
+        String query = "SELECT d.doenca_nome " +
+                "FROM pessoa_doenca pd " +
+                "JOIN doenca d ON pd.pessoaDoenca_doencaID = d.doenca_ID " +
+                "WHERE pd.pessoaDoenca_pessoaID = ?;";
+        Cursor cursor = db.rawQuery(query, new String[] {String.valueOf(idUsuario)});
+
+        while (cursor.moveToNext()) {
+            String nomeDoenca = cursor.getString(cursor.getColumnIndex("doenca_nome"));
+            nomesDoencas.add(nomeDoenca);
+        }
+        cursor.close();
+        db.close();
+        return nomesDoencas;
     }
 }

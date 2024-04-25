@@ -13,7 +13,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.tcc.idadeativa.DAO.DAO;
 import com.tcc.idadeativa.objetos.Pessoa;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+
+import java.util.List;
 
 public class activity_TelaPrincipal extends AppCompatActivity {
 
@@ -23,6 +29,8 @@ public class activity_TelaPrincipal extends AppCompatActivity {
     private TextView ipt_SexoSUS;
     private TextView ipt_NumeroSUS;
     private ImageView iv_User_home;
+    private TextView ipt_NomeUser;
+    private Spinner selectDoencasMain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +46,20 @@ public class activity_TelaPrincipal extends AppCompatActivity {
         ipt_SexoSUS = findViewById(R.id.ipt_SexoSUS);
         ipt_NumeroSUS = findViewById(R.id.ipt_NumeroSUS);
         iv_User_home = findViewById(R.id.iv_User_home);
+        ipt_NomeUser = findViewById(R.id.ipt_NomeUser);
         AppCompatButton btnMedir = findViewById(R.id.btnMedir);
+        selectDoencasMain = findViewById(R.id.selectDoencasMain);
+
+        // Obtenha o ID da pessoa logada (você precisa implementar isso)
+        int idUsuario = getIdUsuarioLogado(); // Implemente este método para obter o ID da pessoa logada
+
+        // Consulte as doenças associadas à pessoa logada
+        List<String> nomesDoencas = consultarDoencasDoUsuario(idUsuario);
+
+        // Preencha o spinner com as doenças encontradas
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, nomesDoencas);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        selectDoencasMain.setAdapter(adapter);
 
         /*CODIGO CHAMA O POP-UP DA DIABETES*/
 
@@ -96,6 +117,7 @@ public class activity_TelaPrincipal extends AppCompatActivity {
         ipt_NomeSUS.setText(pessoa.getPessoa_nomeSUS());
         ipt_DataSUS.setText(pessoa.getPessoa_dataNascimento());
         ipt_SexoSUS.setText(pessoa.getPessoa_sexo());
+        ipt_NomeUser.setText(pessoa.getPessoa_nome());
 
         byte[] decodedString = Base64.decode(pessoa.getPessoa_foto(), Base64.DEFAULT);
         Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
@@ -183,4 +205,21 @@ public class activity_TelaPrincipal extends AppCompatActivity {
                 numeroSUS.substring(7, 11) + " " +
                 numeroSUS.substring(11);
     }
+
+    // Método para consultar as doenças associadas à pessoa logada
+    private List<String> consultarDoencasDoUsuario(int idUsuario) {
+        DAO dao = new DAO(getApplicationContext());
+        List<String> nomesDoencas = dao.buscarDoencasDoUsuario(idUsuario);
+        dao.close();
+        return nomesDoencas;
+    }
+
+    // Método para obter o ID da pessoa logada
+    private int getIdUsuarioLogado() {
+        // Implemente a lógica para obter o ID da pessoa logada
+        // Por exemplo, você pode obtê-lo do objeto Pessoa recebido na intent ou de uma sessão de usuário
+        Pessoa pessoa = (Pessoa) getIntent().getSerializableExtra("pessoa");
+        return pessoa.getPessoa_ID();
+    }
+
 }
