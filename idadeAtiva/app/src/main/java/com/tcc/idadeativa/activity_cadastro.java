@@ -217,6 +217,7 @@ public class activity_cadastro extends Activity {
                     lblNumeroCartao.setText("");
 
                     Toast.makeText(getApplicationContext(), "Usuário cadastrado com sucesso!", Toast.LENGTH_SHORT).show();
+                    abrirTelaInicial();
                 } else {
                     Toast.makeText(getApplicationContext(), "Por favor preencha todos os campos!", Toast.LENGTH_SHORT).show();
                 }
@@ -231,10 +232,10 @@ public class activity_cadastro extends Activity {
         return position + 1; // Assumindo que os IDs começam de 1
     }
 
-
     private void abrirTelaInicial() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        finish();
     }
 
     private void escolherFonteDaFoto() {

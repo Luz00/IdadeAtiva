@@ -113,11 +113,13 @@ public class MainActivity extends AppCompatActivity {
         private void abrirActivityCadastro () {
             Intent intent = new Intent(this, activity_cadastro.class);
             startActivity(intent);
+            finish();
         }
 
         private void abrirActivityPrincipal(Pessoa pessoa) {
             Intent intent = new Intent(this, activity_TelaPrincipal.class);
             intent.putExtra("pessoa", pessoa);
             startActivity(intent);
+            finish();
         }
 }

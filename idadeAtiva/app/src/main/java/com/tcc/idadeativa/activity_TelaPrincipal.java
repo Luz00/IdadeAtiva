@@ -179,23 +179,27 @@ public class activity_TelaPrincipal extends AppCompatActivity {
         Intent intent = new Intent(this, activity_tela_alarme.class);
         intent.putExtra("pessoa", pessoa);
         startActivity(intent);
+        finish();
     }
 
     private void abrirTelaMain() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        finish();
     }
 
     private void abrirTelaRelatorio(Pessoa pessoa) {
         Intent intent = new Intent(this, activity_relatorio.class);
         intent.putExtra("pessoa", pessoa);
         startActivity(intent);
+        finish();
     }
 
     private void abrirTelaAtualizar(Pessoa pessoa){
         Intent intent = new Intent(this, activity_atualizacao.class);
         intent.putExtra("pessoa", pessoa);
         startActivity(intent);
+        finish();
     }
 
     private String formatarNumeroSUS(String numeroSUS) {

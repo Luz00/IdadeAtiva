@@ -14,7 +14,7 @@ import java.util.List;
 public class DAO extends SQLiteOpenHelper {
 
     public DAO (Context context){
-        super(context, "banco", null, 45);
+        super(context, "banco", null, 49);
     }
 
     //RODA NA PRIMEIRA EXECUÇÃO DA APLICAÇÃO PARA CRIAR O BANCO DE DADOS
@@ -146,4 +146,107 @@ public class DAO extends SQLiteOpenHelper {
         db.close();
         return nomesDoencas;
     }
+    @SuppressLint("Range")
+    public String buscarSexoDaPessoa(int idUsuario) {
+        SQLiteDatabase db = getReadableDatabase();
+        String sexo = "";
+
+        String query = "SELECT pessoa_sexo FROM pessoa WHERE pessoa_ID = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(idUsuario)});
+
+        if (cursor.moveToFirst()) {
+            sexo = cursor.getString(cursor.getColumnIndex("pessoa_sexo"));
+        }
+
+        cursor.close();
+        db.close();
+
+        return sexo;
+    }
+
+    public boolean atualizarPessoa(Pessoa pessoa) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues valores = new ContentValues();
+        valores.put("pessoa_nome", pessoa.getPessoa_nome());
+        valores.put("pessoa_sexo", pessoa.getPessoa_sexo());
+        valores.put("pessoa_nomeSUS", pessoa.getPessoa_nomeSUS());
+        valores.put("pessoa_dataNascimento", pessoa.getPessoa_dataNascimento());
+        valores.put("pessoa_numSUS", pessoa.getPessoa_numSUS());
+        valores.put("pessoa_foto", pessoa.getPessoa_foto());
+
+        // Especificar a cláusula WHERE para atualizar o registro correto
+        String whereClause = "pessoa_ID = ?";
+        String[] whereArgs = {String.valueOf(pessoa.getPessoa_ID())};
+
+        // Realizar a atualização no banco de dados
+        int linhasAfetadas = db.update("pessoa", valores, whereClause, whereArgs);
+
+        db.close();
+
+        // Verificar se a atualização foi bem-sucedida
+        return linhasAfetadas > 0;
+    }
+    @SuppressLint("Range")
+    public void atualizarPessoaDoenca(int idUsuario, List<String> nomesDoencasSelecionadas) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        // Remover todas as associações de doenças para o usuário específico
+        String deleteQuery = "DELETE FROM pessoa_doenca WHERE pessoaDoenca_pessoaID = ?";
+        db.execSQL(deleteQuery, new String[]{String.valueOf(idUsuario)});
+
+        // Inserir novamente as associações com base nas doenças selecionadas
+        for (String nomeDoenca : nomesDoencasSelecionadas) {
+            // Primeiro, precisamos obter o ID da doença com base no nome
+            String selectQuery = "SELECT doenca_ID FROM doenca WHERE doenca_nome = ?";
+            Cursor cursor = db.rawQuery(selectQuery, new String[]{nomeDoenca});
+
+            if (cursor.moveToFirst()) {
+                int idDoenca = cursor.getInt(cursor.getColumnIndex("doenca_ID"));
+
+                // Agora, podemos inserir a associação na tabela Pessoa-Doença
+                ContentValues valores = new ContentValues();
+                valores.put("pessoaDoenca_pessoaID", idUsuario);
+                valores.put("pessoaDoenca_doencaID", idDoenca);
+                db.insert("pessoa_doenca", null, valores);
+            }
+
+            cursor.close();
+        }
+
+        db.close();
+    }
+    public boolean excluirPessoa(int idPessoa) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        // Especificar a cláusula WHERE para excluir o registro correto
+        String whereClause = "pessoa_ID = ?";
+        String[] whereArgs = {String.valueOf(idPessoa)};
+
+        // Realizar a exclusão no banco de dados
+        int linhasAfetadas = db.delete("pessoa", whereClause, whereArgs);
+
+        db.close();
+
+        // Verificar se a exclusão foi bem-sucedida
+        return linhasAfetadas > 0;
+    }
+    @SuppressLint("Range")
+    public boolean atualizarFotoPessoa(Pessoa pessoa) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues valores = new ContentValues();
+        valores.put("pessoa_foto", pessoa.getPessoa_foto());
+
+        // Especificar a cláusula WHERE para atualizar o registro correto
+        String whereClause = "pessoa_ID = ?";
+        String[] whereArgs = {String.valueOf(pessoa.getPessoa_ID())};
+
+        // Realizar a atualização no banco de dados
+        int linhasAfetadas = db.update("pessoa", valores, whereClause, whereArgs);
+
+        db.close();
+
+        // Verificar se a atualização foi bem-sucedida
+        return linhasAfetadas > 0;
+    }
+
 }

@@ -60,12 +60,14 @@ public class activity_relatorio extends AppCompatActivity {
         Intent intent = new Intent(this, activity_tela_alarme.class);
         intent.putExtra("pessoa", pessoa);
         startActivity(intent);
+        finish();
     }
 
     private void abrirTelaHome(Pessoa pessoa) {
         Intent intent = new Intent(this, activity_TelaPrincipal.class);
         intent.putExtra("pessoa", pessoa);
         startActivity(intent);
+        finish();
     }
 
     // Método para consultar as doenças associadas à pessoa logada
