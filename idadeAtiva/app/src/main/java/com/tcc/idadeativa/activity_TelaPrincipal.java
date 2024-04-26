@@ -50,7 +50,7 @@ public class activity_TelaPrincipal extends AppCompatActivity {
         AppCompatButton btnMedir = findViewById(R.id.btnMedir);
         selectDoencasMain = findViewById(R.id.selectDoencasMain);
 
-        // Obtenha o ID da pessoa logada (você precisa implementar isso)
+        // Obtenha o ID da pessoa logada
         int idUsuario = getIdUsuarioLogado(); // Implemente este método para obter o ID da pessoa logada
 
         // Consulte as doenças associadas à pessoa logada
