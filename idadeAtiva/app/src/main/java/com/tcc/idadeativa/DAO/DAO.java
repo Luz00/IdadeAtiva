@@ -14,7 +14,7 @@ import java.util.List;
 public class DAO extends SQLiteOpenHelper {
 
     public DAO (Context context){
-        super(context, "banco", null, 49);
+        super(context, "banco", null, 51);
     }
 
     //RODA NA PRIMEIRA EXECUÇÃO DA APLICAÇÃO PARA CRIAR O BANCO DE DADOS
@@ -247,6 +247,23 @@ public class DAO extends SQLiteOpenHelper {
 
         // Verificar se a atualização foi bem-sucedida
         return linhasAfetadas > 0;
+    }
+
+    // Adicione este método à sua classe DAO para inserir uma nova medição
+    public boolean inserirMedicao(String data, double valor, int pessoaID, int doencaID) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues valores = new ContentValues();
+        valores.put("medicao_data", data);
+        valores.put("medicao_valor", valor);
+        valores.put("medicao_pessoaID", pessoaID);
+        valores.put("medicao_doencaID", doencaID);
+
+        // Insere a nova medição no banco de dados
+        long result = db.insert("medicao", null, valores);
+        db.close();
+
+        // Retorna true se a inserção foi bem-sucedida
+        return result != -1;
     }
 
 }

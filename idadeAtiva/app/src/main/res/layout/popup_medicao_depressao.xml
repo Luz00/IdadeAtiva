@@ -8,51 +8,56 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Insira sua medição de Hipotensão"
+        android:text="Como você está se sentindo hoje?"
         android:textSize="18sp"
         android:textStyle="bold"
         android:gravity="center"
         android:paddingBottom="16dp" />
 
-    <LinearLayout
+    <EditText
+        android:id="@+id/editTextMedicao"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
+        android:hint="Insira um número de 0 a 3"
+        android:inputType="numberDecimal"
+        android:padding="8dp"
+        android:layout_marginBottom="16dp" />
 
-        <EditText
-            android:id="@+id/iptValor1"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:hint="EX: 13"
-            android:inputType="numberDecimal"
-            android:padding="8dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="0 - Não me sinto triste"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:paddingBottom="16dp" />
 
-        <TextView
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="POR"
-            android:textSize="18sp"
-            android:layout_marginEnd="20dp"
-            android:textStyle="bold"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="1 - Eu me sinto triste"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:paddingBottom="16dp" />
 
-        <EditText
-            android:id="@+id/iptValor2"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:hint="EX: 8"
-            android:inputType="numberDecimal"
-            android:padding="8dp"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="2 - Estou sempre triste e não consigo sair disto"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:paddingBottom="16dp" />
 
-    </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="3 - Estou tão triste que não consigo suportar"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:paddingBottom="16dp" />
 
     <LinearLayout
         android:layout_width="match_parent"

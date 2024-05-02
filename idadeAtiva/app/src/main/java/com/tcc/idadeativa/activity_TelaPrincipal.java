@@ -18,8 +18,12 @@ import com.tcc.idadeativa.DAO.DAO;
 import com.tcc.idadeativa.objetos.Pessoa;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class activity_TelaPrincipal extends AppCompatActivity {
 
@@ -31,6 +35,7 @@ public class activity_TelaPrincipal extends AppCompatActivity {
     private ImageView iv_User_home;
     private TextView ipt_NomeUser;
     private Spinner selectDoencasMain;
+    private DAO dao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +57,7 @@ public class activity_TelaPrincipal extends AppCompatActivity {
 
         // Obtenha o ID da pessoa logada
         int idUsuario = getIdUsuarioLogado(); // Implemente este método para obter o ID da pessoa logada
-
+        dao = new DAO(this);
         // Consulte as doenças associadas à pessoa logada
         List<String> nomesDoencas = consultarDoencasDoUsuario(idUsuario);
 
@@ -61,50 +66,243 @@ public class activity_TelaPrincipal extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         selectDoencasMain.setAdapter(adapter);
 
-        /*CODIGO CHAMA O POP-UP DA DIABETES*/
+        /*CODIGO CHAMA O POP-UP DAS DOENÇA SELECIONADA*/
 
         btnMedir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Criar um AlertDialog.Builder
+
+                String doencaSelecionada = selectDoencasMain.getSelectedItem().toString();
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity_TelaPrincipal.this);
+                View view;
 
-                // Inflar o layout personalizado para o AlertDialog
-                View view = getLayoutInflater().inflate(R.layout.popup_medicao_diabetes, null);
-                builder.setView(view);
+                switch (doencaSelecionada) {
+                    case "Diabetes":
+                        view = getLayoutInflater().inflate(R.layout.popup_medicao_diabetes, null);
+                        builder.setView(view);
 
-                // Referenciar os elementos do layout personalizado
-                EditText editTextMedicao = view.findViewById(R.id.editTextMedicao);
-                AppCompatButton btnCancelar = view.findViewById(R.id.btnCancelar);
-                AppCompatButton btnSalvar = view.findViewById(R.id.btnSalvar);
+                        // Referenciar os elementos do layout personalizado
+                        EditText editTextMedicao_Diabetes = view.findViewById(R.id.editTextMedicao);
+                        AppCompatButton btnCancelar_Diabetes = view.findViewById(R.id.btnCancelar);
+                        AppCompatButton btnSalvar_Diabetes = view.findViewById(R.id.btnSalvar);
 
-                // Configurar a ação do botão Cancelar
-                btnCancelar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // Fechar o AlertDialog
-                        alertDialog.dismiss();
-                    }
-                });
+                        // Configurar a ação do botão Cancelar
+                        btnCancelar_Diabetes.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                alertDialog.dismiss();
+                            }
+                        });
 
-                // Configurar a ação do botão Salvar
-                btnSalvar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // Obter o valor digitado pelo usuário
-                        String medição = editTextMedicao.getText().toString();
+                        // Configurar a ação do botão Salvar
+                        btnSalvar_Diabetes.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                // Obter o valor digitado pelo usuário
+                                String medição = editTextMedicao_Diabetes.getText().toString();
+                                String dataAtual = obterDataHoraAtualBrasileira();
+                                int IdDoenca = getIdDoenca("Diabetes");
 
-                        // Você pode fazer o que quiser com o valor digitado, como salvá-lo em um banco de dados ou exibi-lo em outro lugar na atividade
-                        // Fechar o AlertDialog
-                        alertDialog.dismiss();
-                    }
-                });
+                                boolean inseridoComSucesso = dao.inserirMedicao(dataAtual, Double.parseDouble(medição), idUsuario, IdDoenca);
 
-                // Criar o AlertDialog
-                alertDialog = builder.create();
+                                if (inseridoComSucesso) {
+                                    Toast.makeText(activity_TelaPrincipal.this, "Medição salva com sucesso!", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(activity_TelaPrincipal.this, "Erro ao salvar medição!", Toast.LENGTH_SHORT).show();
+                                }
 
-                // Mostrar o AlertDialog
-                alertDialog.show();
+                                alertDialog.dismiss();
+                            }
+                        });
+                        // Criar o AlertDialog
+                        alertDialog = builder.create();
+                        // Mostrar o AlertDialog
+                        alertDialog.show();
+                        break;
+
+                    case "Arritimia":
+                        view = getLayoutInflater().inflate(R.layout.popup_medicao_arritimia, null);
+                        builder.setView(view);
+
+                        // Referenciar os elementos do layout personalizado
+                        EditText editTextMedicao_Arritimia = view.findViewById(R.id.editTextMedicao);
+                        AppCompatButton btnCancelar_Arritimia = view.findViewById(R.id.btnCancelar);
+                        AppCompatButton btnSalvar_Arritimia = view.findViewById(R.id.btnSalvar);
+
+                        // Configurar a ação do botão Cancelar
+                        btnCancelar_Arritimia.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                alertDialog.dismiss();
+                            }
+                        });
+
+                        // Configurar a ação do botão Salvar
+                        btnSalvar_Arritimia.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String medição = editTextMedicao_Arritimia.getText().toString();
+                                String dataAtual = obterDataHoraAtualBrasileira();
+                                int IdDoenca = getIdDoenca("Arritimia");
+
+                                boolean inseridoComSucesso = dao.inserirMedicao(dataAtual, Double.parseDouble(medição), idUsuario, IdDoenca);
+
+                                if (inseridoComSucesso) {
+                                    Toast.makeText(activity_TelaPrincipal.this, "Medição salva com sucesso!", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(activity_TelaPrincipal.this, "Erro ao salvar medição!", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                        // Criar o AlertDialog
+                        alertDialog = builder.create();
+                        // Mostrar o AlertDialog
+                        alertDialog.show();
+                        break;
+
+                    case "Hipertensão":
+                        view = getLayoutInflater().inflate(R.layout.popup_medicao_hipertensao, null);
+                        builder.setView(view);
+
+                        // Referenciar os elementos do layout personalizado
+                        EditText editTextMedicao_Hipertensao1 = view.findViewById(R.id.iptValor1);
+                        EditText editTextMedicao_Hipertensao2 = view.findViewById(R.id.iptValor2);
+
+                        AppCompatButton btnCancelar_Hipertensao = view.findViewById(R.id.btnCancelar);
+                        AppCompatButton btnSalvar_Hipertensao = view.findViewById(R.id.btnSalvar);
+
+                        // Configurar a ação do botão Cancelar
+                        btnCancelar_Hipertensao.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                alertDialog.dismiss();
+                            }
+                        });
+
+                        // Configurar a ação do botão Salvar
+                        btnSalvar_Hipertensao.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                // Obter o valor digitado pelo usuário
+                                String medição1 = editTextMedicao_Hipertensao1.getText().toString();
+                                String medição2 = editTextMedicao_Hipertensao2.getText().toString();
+
+                                String mediçãoPressao = medição1 + "." + medição2;
+
+                                String dataAtual = obterDataHoraAtualBrasileira();
+                                int IdDoenca = getIdDoenca("Hipertensão");
+
+                                boolean inseridoComSucesso = dao.inserirMedicao(dataAtual, Double.parseDouble(mediçãoPressao), idUsuario, IdDoenca);
+
+                                if (inseridoComSucesso) {
+                                    Toast.makeText(activity_TelaPrincipal.this, "Medição salva com sucesso!", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(activity_TelaPrincipal.this, "Erro ao salvar medição!", Toast.LENGTH_SHORT).show();
+                                }
+                                alertDialog.dismiss();
+                            }
+                        });
+                        // Criar o AlertDialog
+                        alertDialog = builder.create();
+                        // Mostrar o AlertDialog
+                        alertDialog.show();
+                        break;
+                    case "Hipotensão":
+                        view = getLayoutInflater().inflate(R.layout.popup_medicao_hipotensao, null);
+                        builder.setView(view);
+
+                        // Referenciar os elementos do layout personalizado
+                        EditText editTextMedicao_hipotensao1 = view.findViewById(R.id.iptValor1);
+                        EditText editTextMedicao_hipotensao2 = view.findViewById(R.id.iptValor2);
+                        AppCompatButton btnCancelar_hipotensao = view.findViewById(R.id.btnCancelar);
+                        AppCompatButton btnSalvar_hipotensao = view.findViewById(R.id.btnSalvar);
+
+                        // Configurar a ação do botão Cancelar
+                        btnCancelar_hipotensao.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                alertDialog.dismiss();
+                            }
+                        });
+
+                        // Configurar a ação do botão Salvar
+                        btnSalvar_hipotensao.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                // Obter o valor digitado pelo usuário
+                                String medição1 = editTextMedicao_hipotensao1.getText().toString();
+                                String medição2 = editTextMedicao_hipotensao2.getText().toString();
+
+                                String mediçãoPressao = medição1 + "." + medição2;
+
+                                String dataAtual = obterDataHoraAtualBrasileira();
+                                int IdDoenca = getIdDoenca("Hipotensão");
+
+                                boolean inseridoComSucesso = dao.inserirMedicao(dataAtual, Double.parseDouble(mediçãoPressao), idUsuario, IdDoenca);
+
+                                if (inseridoComSucesso) {
+                                    Toast.makeText(activity_TelaPrincipal.this, "Medição salva com sucesso!", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(activity_TelaPrincipal.this, "Erro ao salvar medição!", Toast.LENGTH_SHORT).show();
+                                }
+                                alertDialog.dismiss();
+                            }
+                        });
+                        // Criar o AlertDialog
+                        alertDialog = builder.create();
+                        // Mostrar o AlertDialog
+                        alertDialog.show();
+                        break;
+
+                    case "Depressão":
+                        view = getLayoutInflater().inflate(R.layout.popup_medicao_depressao, null);
+                        builder.setView(view);
+
+                        // Referenciar os elementos do layout personalizado
+                        EditText editTextMedicao_depressao = view.findViewById(R.id.editTextMedicao);
+                        AppCompatButton btnCancelar_Depressao = view.findViewById(R.id.btnCancelar);
+                        AppCompatButton btnSalvar_Depressao = view.findViewById(R.id.btnSalvar);
+
+                        // Configurar a ação do botão Cancelar
+                        btnCancelar_Depressao.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                alertDialog.dismiss();
+                            }
+                        });
+
+                        // Configurar a ação do botão Salvar
+                        btnSalvar_Depressao.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                // Obter o valor digitado pelo usuário
+                                String medição = editTextMedicao_depressao.getText().toString();
+
+                                if (medição.equals("0") || medição.equals("1") || medição.equals("2") || medição.equals("3")) {
+                                    // O valor está dentro do intervalo desejado, continuar com a inserção no banco de dados
+                                    String dataAtual = obterDataHoraAtualBrasileira();
+                                    int IdDoenca = getIdDoenca("Depressão");
+
+                                    boolean inseridoComSucesso = dao.inserirMedicao(dataAtual, Double.parseDouble(medição), idUsuario, IdDoenca);
+
+                                    if (inseridoComSucesso) {
+                                        Toast.makeText(activity_TelaPrincipal.this, "Medição salva com sucesso!", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(activity_TelaPrincipal.this, "Erro ao salvar medição!", Toast.LENGTH_SHORT).show();
+                                    }
+                                    alertDialog.dismiss();
+                                } else {
+                                    // O valor não está dentro do intervalo desejado, exibir uma mensagem de erro para o usuário
+                                    Toast.makeText(activity_TelaPrincipal.this, "Por favor, insira um valor válido!", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                        // Criar o AlertDialog
+                        alertDialog = builder.create();
+                        // Mostrar o AlertDialog
+                        alertDialog.show();
+                        break;
+                }
             }
         });
 
@@ -226,4 +424,32 @@ public class activity_TelaPrincipal extends AppCompatActivity {
         return pessoa.getPessoa_ID();
     }
 
+    public static String obterDataHoraAtualBrasileira() {
+        // Define o formato desejado para a data e hora
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
+        // Obtém a data e hora atual
+        Date dataHoraAtual = new Date(System.currentTimeMillis());
+        // Formata a data e hora atual para o formato brasileiro
+        return sdf.format(dataHoraAtual);
+    }
+
+    private int getIdDoenca(String doenca) {
+        int idDoenca = 0;
+        if (doenca.equals("Arritimia")) {
+            idDoenca = 1;
+        }
+        else if (doenca.equals("Depressão")) {
+            idDoenca = 2;
+        }
+        else if (doenca.equals("Diabetes")) {
+            idDoenca = 3;
+        }
+        else if (doenca.equals("Hipotensão")) {
+            idDoenca = 5;
+        }
+        else if (doenca.equals("Hipertensão")) {
+            idDoenca = 4;
+        }
+        return idDoenca;
+    }
 }
