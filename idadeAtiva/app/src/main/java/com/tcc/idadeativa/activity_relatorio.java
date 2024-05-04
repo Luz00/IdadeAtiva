@@ -35,7 +35,7 @@ public class activity_relatorio extends AppCompatActivity {
 
     private Spinner selectDoencasMain;
     private DAO dao;
-    private EditText nbrMedia;
+    private TextView nbrMedia, nbrMaxima, nbrMinimo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +48,8 @@ public class activity_relatorio extends AppCompatActivity {
         dao = new DAO(this);
         LineChart lineChart = findViewById(R.id.lineChart);
         nbrMedia = findViewById(R.id.nbrMedia);
+        nbrMaxima = findViewById(R.id.nbrMaxima);
+        nbrMinimo = findViewById(R.id.nbrMinimo);
 
 //        String doencaSelecionada = selectDoencasMain.getSelectedItem().toString();
         // Consulte as doenças associadas à pessoa logada
@@ -92,18 +94,18 @@ public class activity_relatorio extends AppCompatActivity {
                 lineChart.setData(lineData);
                 lineChart.invalidate();
 
-                List<Medicao> medicoes2 = dao.obterUltimasMedicoes(idDoenca, idUsuario, 7);
+              double valorMedia = dao.obterSomaUltimosSeteValores(idDoenca, idUsuario);
+              double valorMediaDiv = valorMedia/7;
+              String textoMedia = String.valueOf((int) valorMediaDiv);
+              nbrMedia.setText(textoMedia);
 
-                // Calcule a média dos valores das medições
-                double soma = 0;
-                for (Medicao medicao : medicoes2) {
-                    soma += medicao.getMedicao_valor();
-                }
-                double media = soma / medicoes2.size();
+              double valorMaximo = dao.obterMaiorValorUltimasSeteMedicoes(idDoenca, idUsuario);
+              String textoMaximo = String.valueOf((int) valorMaximo);
+              nbrMaxima.setText(textoMaximo);
 
-                // Exiba a média no TextView nbrMedia
-                nbrMedia.setText(String.valueOf(media));
-
+              double valorMinimo = dao.obterMenorValorUltimasSeteMedicoes(idDoenca, idUsuario);
+              String textoMinimo = String.valueOf((int) valorMinimo);
+              nbrMinimo.setText(textoMinimo);
             }
 
             @Override

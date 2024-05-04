@@ -7,6 +7,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
@@ -307,33 +308,65 @@ public class DAO extends SQLiteOpenHelper {
         db.close();
         return medicoes;
     }
-    @SuppressLint("Range")
-    public List<Medicao> obterUltimasMedicoes(int idDoenca, int idUsuario, int limite) {
-        List<Medicao> medicoes = new ArrayList<>();
 
-        // Consulta para obter as últimas "limite" entradas de medição para o usuário e a doença especificados
-        String query = "SELECT * FROM medicao WHERE id_doenca = ? AND id_usuario = ? ORDER BY medicao_data DESC LIMIT ?";
-        String[] selectionArgs = {String.valueOf(idDoenca), String.valueOf(idUsuario), String.valueOf(limite)};
+    @SuppressLint("Range")
+    public double obterSomaUltimosSeteValores(int idDoenca, int idUsuario) {
+        SQLiteDatabase db = getReadableDatabase();
+        double soma = 0;
+
+        // Consulta SQL para selecionar os últimos sete valores da coluna 'medicao_valor'
+        // para um usuário e uma doença específicos
+        String query = "SELECT medicao_valor FROM medicao " +
+                "WHERE medicao_pessoaID = ? AND medicao_doencaID = ? " +
+                "ORDER BY medicao_data DESC LIMIT 7";
+        String[] selectionArgs = {String.valueOf(idUsuario), String.valueOf(idDoenca)};
+        Cursor cursor = null;
+
+        try {
+            cursor = db.rawQuery(query, selectionArgs);
+
+            // Iterar sobre o cursor e somar os valores
+            while (cursor != null && cursor.moveToNext()) {
+                double valor = cursor.getDouble(cursor.getColumnIndex("medicao_valor"));
+                soma += valor;
+            }
+        } catch (SQLiteException e) {
+            Log.e(TAG, "Erro ao obter soma dos últimos sete valores: " + e.getMessage());
+        } finally {
+            // Fechar o cursor e o banco de dados
+            if (cursor != null) {
+                cursor.close();
+            }
+            db.close();
+        }
+
+        return soma;
+    }
+
+    @SuppressLint("Range")
+    public double obterMaiorValorUltimasSeteMedicoes(int idDoenca, int idUsuario) {
+        double maiorValor = 0.0;
+
+        // Consulta para obter as últimas sete entradas de medição para o usuário e a doença especificados
+        String query = "SELECT medicao_valor FROM medicao WHERE medicao_pessoaID = ? AND medicao_doencaID = ? ORDER BY medicao_data DESC LIMIT 7";
+        String[] selectionArgs = {String.valueOf(idUsuario), String.valueOf(idDoenca)};
         Cursor cursor = null;
         SQLiteDatabase db = this.getReadableDatabase();
 
         try {
             cursor = db.rawQuery(query, selectionArgs);
 
-            // Iterar sobre o cursor e adicionar as medições à lista
+            // Iterar sobre o cursor para encontrar o maior valor
             if (cursor != null && cursor.moveToFirst()) {
                 do {
-                    int idMedicao = cursor.getInt(cursor.getColumnIndex("id_medicao"));
-                    double valorMedicao = cursor.getDouble(cursor.getColumnIndex("valor_medicao"));
-                    String dataMedicao = cursor.getString(cursor.getColumnIndex("data_medicao"));
-
-                    // Criar um objeto Medicao e adicioná-lo à lista
-                    Medicao medicao = new Medicao();
-                    medicoes.add(medicao);
+                    double valorMedicao = cursor.getDouble(cursor.getColumnIndex("medicao_valor"));
+                    if (valorMedicao > maiorValor) {
+                        maiorValor = valorMedicao;
+                    }
                 } while (cursor.moveToNext());
             }
         } catch (Exception e) {
-            Log.e(TAG, "Erro ao obter as últimas medições: " + e.getMessage());
+            Log.e(TAG, "Erro ao obter o maior valor das últimas medições: " + e.getMessage());
         } finally {
             // Fechar o cursor e o banco de dados
             if (cursor != null) {
@@ -344,7 +377,41 @@ public class DAO extends SQLiteOpenHelper {
             }
         }
 
-        return medicoes;
+        return maiorValor;
+    }
+
+    @SuppressLint("Range")
+    public double obterMenorValorUltimasSeteMedicoes(int idDoenca, int idUsuario) {
+        SQLiteDatabase db = getReadableDatabase();
+
+        // Consulta SQL para selecionar os últimos sete valores da tabela de medições
+        String query = "SELECT medicao_valor FROM medicao WHERE medicao_pessoaID = ? AND medicao_doencaID = ? ORDER BY medicao_data DESC LIMIT 7";
+        String[] selectionArgs = {String.valueOf(idUsuario), String.valueOf(idDoenca)};
+        Cursor cursor = db.rawQuery(query, selectionArgs);
+
+        List<Double> valores = new ArrayList<>();
+
+        // Iterar sobre o cursor e adicionar os valores à lista
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                double valor = cursor.getDouble(cursor.getColumnIndex("medicao_valor"));
+                valores.add(valor);
+            } while (cursor.moveToNext());
+        }
+
+        // Fechar o cursor e o banco de dados
+        if (cursor != null) {
+            cursor.close();
+        }
+        db.close();
+
+        // Verificar se há valores na lista
+        if (valores.isEmpty()) {
+            return 0; // Se não houver valores, retornar 0
+        }
+
+        // Retornar o menor valor da lista
+        return Collections.min(valores);
     }
 
 }
