@@ -276,6 +276,7 @@ public class activity_atualizacao extends AppCompatActivity {
                             nomesDoencasSelecionadas.add(multiSelectAdapter.getItem(i));
                         }
                     }
+
                     // Atualize a foto no objeto Pessoa
                     pessoa.setPessoa_foto(fotoString);
 

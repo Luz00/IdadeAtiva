@@ -2,97 +2,42 @@ package com.tcc.idadeativa;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
-import android.app.DatePickerDialog;
+
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.DatePicker;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.Toast;
+import android.widget.ToggleButton;
+
 import com.tcc.idadeativa.objetos.Pessoa;
+
 import java.util.Calendar;
 
 public class activity_tela_alarme extends AppCompatActivity {
 
-    private RadioButton rdBtnTemporario, rdBtnPermanente;
-    private TextView tvPeriodo;
-    private EditText lblNumeroDias;
-    private static final String TAG = "activity_cadastro";
-    private TextView mDisplayDate;
-    private DatePickerDialog.OnDateSetListener mDateSetListener;
-
+    TimePicker alarmTimePicker;
+    PendingIntent pendingIntent;
+    AlarmManager alarmManager;
+    EditText lblTitulo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tela_alarme);
 
-        /* CÓDIGO QUE FAZ A LÓGICA DE DESMARCAR OS RADIOSBUTOTN E SETAR OS ELEMENTOS VISIBLE */
-
-        rdBtnTemporario = findViewById(R.id.rd_btn_temporario);
-        rdBtnPermanente = findViewById(R.id.rd_btn_permanente);
-        tvPeriodo = findViewById(R.id.tvPeriodo);
-        lblNumeroDias = findViewById(R.id.lblNumeroDias);
-
-        RadioGroup radioGroup = findViewById(R.id.radioGroup);
-
-        // Lógica para garantir que apenas um RadioButton pode ser selecionado
-
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.rd_btn_temporario) {
-                    rdBtnPermanente.setChecked(false);
-                    tvPeriodo.setVisibility(View.VISIBLE);
-                    lblNumeroDias.setVisibility(View.VISIBLE);
-                } else if (checkedId == R.id.rd_btn_permanente) {
-                    rdBtnTemporario.setChecked(false);
-                    tvPeriodo.setVisibility(View.INVISIBLE);
-                    lblNumeroDias.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
-        /* ------------------------------------------------------------------------------------ */
-
-        /* CÓDIGO QUE CRIA JANELA PARA DATA DE NASCIMENTO E SALVA NA TEXTVIEW */
-
-        mDisplayDate = (TextView) findViewById(R.id.tvDateInicio);
-
-        mDisplayDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Calendar cal = Calendar.getInstance();
-                int ano = cal.get(Calendar.YEAR);
-                int mes = cal.get(Calendar.MONTH);
-                int dia = cal.get(Calendar.DAY_OF_MONTH);
-
-                DatePickerDialog dialog = new DatePickerDialog(
-                        activity_tela_alarme.this,
-                        android.R.style.Theme_DeviceDefault_Dialog,
-                        mDateSetListener,
-                        dia,mes,ano);
-                dialog.show();
-            }
-        });
-
-        mDateSetListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                month = month + 1;
-                Log.d(TAG, "onDateSet: date: " + dayOfMonth + "/" + month + "/" + year);
-                String data = dayOfMonth + "/" + month + "/" + year;
-                mDisplayDate.setText(data);
-            }
-        };
-
-        /* ------------------------------------------------------------------------------------ */
-
         /* CÓDIGO QUE ABRE A TELA PRINCIPAL QUANDO CLICA NO BOTÃO DA CASINHA */
         AppCompatButton btnHome = findViewById(R.id.btnHome);
         AppCompatButton btnRelatorio = findViewById(R.id.btnRelatorio);
+
+        alarmTimePicker = (TimePicker) findViewById(R.id.timePicker);
+        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        lblTitulo = findViewById(R.id.lblTitulo);
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
@@ -127,5 +72,39 @@ public class activity_tela_alarme extends AppCompatActivity {
         intent.putExtra("pessoa", pessoa);
         startActivity(intent);
         finish();
+    }
+
+    public void OnToggleClicked(View view) {
+        long time;
+        if (((ToggleButton) view).isChecked()) {
+            Toast.makeText(activity_tela_alarme.this, "Alarme Definido!", Toast.LENGTH_SHORT).show();
+            Calendar calendar = Calendar.getInstance();
+
+            // calendar is called to get current time in hour and minute
+            calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getCurrentHour());
+            calendar.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute());
+
+            // using intent i have class AlarmReceiver class which inherits
+            // BroadcastReceiver
+            Intent intent = new Intent(this, AlarmeReceiver.class);
+            intent.putExtra("titulo", lblTitulo.getText().toString()); // lblTitulo é o EditText
+            // we call broadcast using pendingIntent
+            pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
+            time = (calendar.getTimeInMillis() - (calendar.getTimeInMillis() % 60000));
+            if (System.currentTimeMillis() > time) {
+                // setting time as AM and PM
+                if (Calendar.AM_PM == 0)
+                    time = time + (1000 * 60 * 60 * 12);
+                else
+                    time = time + (1000 * 60 * 60 * 24);
+            }
+            // Alarm rings continuously until toggle button is turned off
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, 10000, pendingIntent);
+            // alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (time * 1000), pendingIntent);
+        } else {
+            alarmManager.cancel(pendingIntent);
+            Toast.makeText(activity_tela_alarme.this, "Alarme Cancelado!", Toast.LENGTH_SHORT).show();
+        }
     }
 }

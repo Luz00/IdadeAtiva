@@ -1,10 +1,17 @@
 package com.tcc.idadeativa;
 
+import static com.google.android.material.transition.MaterialSharedAxis.X;
+
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
@@ -16,14 +23,19 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.tcc.idadeativa.DAO.DAO;
+import com.tcc.idadeativa.objetos.Medicao;
 import com.tcc.idadeativa.objetos.Pessoa;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class activity_relatorio extends AppCompatActivity {
 
     private Spinner selectDoencasMain;
+    private DAO dao;
+    private EditText nbrMedia;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,12 +45,13 @@ public class activity_relatorio extends AppCompatActivity {
         AppCompatButton btnClock = findViewById(R.id.btnClock);
         AppCompatButton btnHome = findViewById(R.id.btnHome);
         selectDoencasMain = findViewById(R.id.selectDoencasMain);
+        dao = new DAO(this);
+        LineChart lineChart = findViewById(R.id.lineChart);
+        nbrMedia = findViewById(R.id.nbrMedia);
 
-
-        // Obtenha o ID da pessoa logada
-        int idUsuario = getIdUsuarioLogado();
-        String doencaSelecionada = selectDoencasMain.getSelectedItem().toString();
+//        String doencaSelecionada = selectDoencasMain.getSelectedItem().toString();
         // Consulte as doenças associadas à pessoa logada
+        int idUsuario = getIdUsuarioLogado();
         List<String> nomesDoencas = consultarDoencasDoUsuario(idUsuario);
 
         // Preencha o spinner com as doenças encontradas
@@ -46,46 +59,58 @@ public class activity_relatorio extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         selectDoencasMain.setAdapter(adapter);
 
-        LineChart lineChart = findViewById(R.id.lineChart);
+        selectDoencasMain.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                // Obtenha o nome da doença selecionada
+                String doencaSelecionada = selectDoencasMain.getSelectedItem().toString();
 
-// Criar uma lista de entradas para os dados do gráfico
-        List<Entry> entries = new ArrayList<>();
-// Adicionar dados de exemplo (substitua isso pelos seus dados reais)
-        entries.add(new Entry(0, 10));
-        entries.add(new Entry(1, 20));
-        entries.add(new Entry(2, 15));
-// ...
+                // Obtenha o ID da doença com base no nome selecionado
+                int idDoenca = getIdDoenca(doencaSelecionada);
 
-// Criar um conjunto de dados com os valores e uma etiqueta
-        LineDataSet dataSet = new LineDataSet(entries, "Valores de medição");
+                List<Medicao> medicoes = dao.obterMedicoesPorDoencaEUsuario(idDoenca, idUsuario);
+                List<Entry> entries = new ArrayList<>();
+                List<String> labels = new ArrayList<>();
+                for (Medicao medicao : medicoes) {
+                    double valor = medicao.getMedicao_valor();
+                    Date data = medicao.getMedicao_data();
+                    String dataFormatada = new SimpleDateFormat("dd/MM/yy — HH:mm").format(data);
+                    entries.add(new Entry(entries.size(), (float) valor));
+                    labels.add(dataFormatada);
+                }
+                LineDataSet dataSet = new LineDataSet(entries, "Valores de Medições");
+                dataSet.setColor(Color.parseColor("#043fc3")); // Definindo a cor da linha
+                dataSet.setLineWidth(2.5f);
+                dataSet.setCircleColor(Color.parseColor("#c30407"));
+                LineData lineData = new LineData(dataSet);
+                lineChart.setDescription(null);
 
-// Criar uma lista de rótulos de data para o eixo X (substitua isso pelos seus rótulos de data reais)
-        ArrayList<String> dates = new ArrayList<>();
-        dates.add("01/01/2023");
-        dates.add("02/01/2023");
-        dates.add("03/01/2023");
-// ...
+                XAxis xAxis = lineChart.getXAxis();
+                xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
+                xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+                xAxis.setLabelRotationAngle(-75);
+                lineChart.setData(lineData);
+                lineChart.invalidate();
 
-// Criar um conjunto de dados de rótulos de data para o eixo X
-        XAxis xAxis = lineChart.getXAxis();
-        xAxis.setValueFormatter(new IndexAxisValueFormatter(dates));
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+                List<Medicao> medicoes2 = dao.obterUltimasMedicoes(idDoenca, idUsuario, 7);
 
-// Criar um conjunto de dados de valores de medição
-        YAxis yAxisRight = lineChart.getAxisRight();
-        yAxisRight.setEnabled(false); // Desativar o eixo direito
+                // Calcule a média dos valores das medições
+                double soma = 0;
+                for (Medicao medicao : medicoes2) {
+                    soma += medicao.getMedicao_valor();
+                }
+                double media = soma / medicoes2.size();
 
-// Adicionar o conjunto de dados ao gráfico
-        LineData lineData = new LineData(dataSet);
-        lineChart.setData(lineData);
+                // Exiba a média no TextView nbrMedia
+                nbrMedia.setText(String.valueOf(media));
 
-// Exibir o gráfico
-        lineChart.invalidate();
+            }
 
-
-
-
-
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // Não é necessário fazer nada se nada estiver selecionado
+            }
+        });
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override

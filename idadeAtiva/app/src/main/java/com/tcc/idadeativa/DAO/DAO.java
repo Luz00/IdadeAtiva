@@ -1,20 +1,29 @@
 package com.tcc.idadeativa.DAO;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import com.tcc.idadeativa.objetos.Medicao;
 import com.tcc.idadeativa.objetos.Pessoa;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 public class DAO extends SQLiteOpenHelper {
 
     public DAO (Context context){
-        super(context, "banco", null, 51);
+        super(context, "banco", null, 52);
     }
 
     //RODA NA PRIMEIRA EXECUÇÃO DA APLICAÇÃO PARA CRIAR O BANCO DE DADOS
@@ -264,6 +273,78 @@ public class DAO extends SQLiteOpenHelper {
 
         // Retorna true se a inserção foi bem-sucedida
         return result != -1;
+    }
+    @SuppressLint("Range")
+    public List<Medicao> obterMedicoesPorDoencaEUsuario(int idDoenca, int idUsuario) {
+        List<Medicao> medicoes = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+
+        // Consulta SQL para selecionar os atributos VALOR e DATA da tabela MEDIÇÃO com base no ID do usuário e da doença
+        String query = "SELECT medicao_valor, medicao_data FROM medicao WHERE medicao_pessoaID = ? AND medicao_doencaID = ?";
+        String[] selectionArgs = {String.valueOf(idUsuario), String.valueOf(idDoenca)};
+
+        Cursor cursor = db.rawQuery(query, selectionArgs);
+
+        // Iterar sobre o cursor e adicionar os resultados à lista de medições
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                double valor = cursor.getDouble(cursor.getColumnIndex("medicao_valor"));
+                String data = cursor.getString(cursor.getColumnIndex("medicao_data"));
+                Medicao medicao = new Medicao();
+                medicao.setMedicao_valor(valor);
+                Date dataMedicao = null;
+                try {
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm");
+                    dataMedicao = sdf.parse(data);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                medicao.setMedicao_data(dataMedicao);
+                medicoes.add(medicao);
+            }
+            cursor.close();
+        }
+        db.close();
+        return medicoes;
+    }
+    @SuppressLint("Range")
+    public List<Medicao> obterUltimasMedicoes(int idDoenca, int idUsuario, int limite) {
+        List<Medicao> medicoes = new ArrayList<>();
+
+        // Consulta para obter as últimas "limite" entradas de medição para o usuário e a doença especificados
+        String query = "SELECT * FROM medicao WHERE id_doenca = ? AND id_usuario = ? ORDER BY medicao_data DESC LIMIT ?";
+        String[] selectionArgs = {String.valueOf(idDoenca), String.valueOf(idUsuario), String.valueOf(limite)};
+        Cursor cursor = null;
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        try {
+            cursor = db.rawQuery(query, selectionArgs);
+
+            // Iterar sobre o cursor e adicionar as medições à lista
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    int idMedicao = cursor.getInt(cursor.getColumnIndex("id_medicao"));
+                    double valorMedicao = cursor.getDouble(cursor.getColumnIndex("valor_medicao"));
+                    String dataMedicao = cursor.getString(cursor.getColumnIndex("data_medicao"));
+
+                    // Criar um objeto Medicao e adicioná-lo à lista
+                    Medicao medicao = new Medicao();
+                    medicoes.add(medicao);
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Erro ao obter as últimas medições: " + e.getMessage());
+        } finally {
+            // Fechar o cursor e o banco de dados
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (db != null) {
+                db.close();
+            }
+        }
+
+        return medicoes;
     }
 
 }
