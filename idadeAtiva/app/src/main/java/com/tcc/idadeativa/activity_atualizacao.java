@@ -10,6 +10,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Shader;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -248,20 +253,22 @@ public class activity_atualizacao extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (!(lblNome.getText().toString().equals("") || singleSelectSpinner.getSelectedItem().equals("") || mDisplayDate.getText().toString().equals("") || lblNomeSus.getText().toString().equals("") || lblNumeroCartao.getText().toString().equals(""))){
-                    // Capturar os dados dos campos da tela
+
                     String nome = lblNome.getText().toString();
                     String nomeSus = lblNomeSus.getText().toString();
                     String dataNascimento = mDisplayDate.getText().toString();
                     String numeroCartao = lblNumeroCartao.getText().toString();
                     String sexo = singleSelectSpinner.getSelectedItem().toString();
+                    ImageView imageView = findViewById(R.id.iv_User);
+                    Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+                    String fotoString = encodeImage(bitmap);
 
-                    // Atualizar o objeto Pessoa com os novos dados
                     pessoa.setPessoa_nome(nome);
                     pessoa.setPessoa_nomeSUS(nomeSus);
                     pessoa.setPessoa_dataNascimento(dataNascimento);
                     pessoa.setPessoa_numSUS(numeroCartao);
                     pessoa.setPessoa_sexo(sexo);
-
+                    pessoa.setPessoa_foto(fotoString);
                     // Atualizar os dados no banco de dados
                     boolean atualizadoComSucesso = dao.atualizarPessoa(pessoa);
 
@@ -279,9 +286,6 @@ public class activity_atualizacao extends AppCompatActivity {
 
                     // Atualize a foto no objeto Pessoa
                     pessoa.setPessoa_foto(fotoString);
-
-                    // Atualize a foto no banco de dados
-                    boolean atualizadoComSucessoFOTO = dao.atualizarFotoPessoa(pessoa);
 
                     // Atualizar associações Pessoa-Doença
                     dao.atualizarPessoaDoenca(idUsuario, nomesDoencasSelecionadas);
@@ -318,13 +322,10 @@ public class activity_atualizacao extends AppCompatActivity {
     }
 
     private int getIdUsuarioLogado() {
-        // Implemente a lógica para obter o ID da pessoa logada
-        // Por exemplo, você pode obtê-lo do objeto Pessoa recebido na intent ou de uma sessão de usuário
         Pessoa pessoa = (Pessoa) getIntent().getSerializableExtra("pessoa");
         return pessoa.getPessoa_ID();
     }
 
-    // Dentro do método onActivityResult após selecionar a imagem
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -334,12 +335,11 @@ public class activity_atualizacao extends AppCompatActivity {
                 Uri selectedImageUri = data.getData();
                 try {
                     Bitmap originalBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImageUri);
-                    Bitmap resizedBitmap = Bitmap.createScaledBitmap(originalBitmap, 500, 500, true);
-                    ivUser.setImageBitmap(resizedBitmap);
-
-                    // Converta a imagem para uma string Base64
+                    Bitmap resizedBitmap = Bitmap.createScaledBitmap(originalBitmap, 400, 400, true);
+                    Bitmap circularBitmap = getCircleBitmap(resizedBitmap);
+                    ivUser.setImageBitmap(circularBitmap); // Exibe a imagem de forma circular no ImageView
                     ByteArrayOutputStream streamFoto = new ByteArrayOutputStream();
-                    resizedBitmap.compress(Bitmap.CompressFormat.PNG, 70, streamFoto);
+                    circularBitmap.compress(Bitmap.CompressFormat.PNG, 50, streamFoto);
                     byte[] fotoemBytes = streamFoto.toByteArray();
                     fotoString = Base64.encodeToString(fotoemBytes, Base64.DEFAULT);
                 } catch (IOException e) {
@@ -347,6 +347,29 @@ public class activity_atualizacao extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    private Bitmap getCircleBitmap(Bitmap bitmap) {
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+
+        Bitmap circleBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(circleBitmap);
+
+        Paint paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setShader(new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
+
+        canvas.drawCircle(width / 2f, height / 2f, Math.min(width, height) / 2f, paint);
+
+        return circleBitmap;
+    }
+
+    public String encodeImage(Bitmap bitmap) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 50, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
+        return Base64.encodeToString(byteArray, Base64.DEFAULT);
     }
 
 }

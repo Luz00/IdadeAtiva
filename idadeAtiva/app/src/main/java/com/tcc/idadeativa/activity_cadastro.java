@@ -4,6 +4,10 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Shader;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
@@ -252,10 +256,11 @@ public class activity_cadastro extends Activity {
                 Uri selectedImageUri = data.getData();
                 try {
                     Bitmap originalBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImageUri);
-                    Bitmap resizedBitmap = Bitmap.createScaledBitmap(originalBitmap, 500, 500, true);
-                    ivUser.setImageBitmap(resizedBitmap);
+                    Bitmap resizedBitmap = Bitmap.createScaledBitmap(originalBitmap, 400, 400, true);
+                    Bitmap circularBitmap = getCircleBitmap(resizedBitmap);
+                    ivUser.setImageBitmap(circularBitmap); // Exibe a imagem de forma circular no ImageView
                     ByteArrayOutputStream streamFoto = new ByteArrayOutputStream();
-                    resizedBitmap.compress(Bitmap.CompressFormat.PNG, 70, streamFoto);
+                    circularBitmap.compress(Bitmap.CompressFormat.PNG, 50, streamFoto);
                     byte[] fotoemBytes = streamFoto.toByteArray();
                     fotoString = Base64.encodeToString(fotoemBytes, Base64.DEFAULT);
                 } catch (IOException e) {
@@ -263,5 +268,30 @@ public class activity_cadastro extends Activity {
                 }
             }
         }
+    }
+
+
+    // Método para exibir a imagem de forma circular no ImageView
+    private void setCircularImage(ImageView imageView, Bitmap bitmap) {
+        if (bitmap != null) {
+            Bitmap circularBitmap = getCircleBitmap(bitmap);
+            imageView.setImageBitmap(circularBitmap);
+        }
+    }
+
+    private Bitmap getCircleBitmap(Bitmap bitmap) {
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+
+        Bitmap circleBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(circleBitmap);
+
+        Paint paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setShader(new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
+
+        canvas.drawCircle(width / 2f, height / 2f, Math.min(width, height) / 2f, paint);
+
+        return circleBitmap;
     }
 }

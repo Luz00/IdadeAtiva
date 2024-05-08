@@ -1,20 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="array_doencas">
-        <item>Diabetes</item>
-        <item>Hipertenção</item>
-        <item>Hipotenção</item>
-    </string-array>
     <string-array name="array_sexo">
         <item>Masculino</item>
         <item>Feminino</item>
         <item>Outro</item>
-    </string-array>
-    <string-array name="array_intervalo">
-        <item>4 Horas</item>
-        <item>6 Horas</item>
-        <item>8 Horas</item>
-        <item>12 Horas</item>
-        <item>24 Horas</item>
     </string-array>
 </resources>

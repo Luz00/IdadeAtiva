@@ -1,7 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.IdadeAtiva" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.IdadeAtiva" parent="Theme.Material3.Light.NoActionBar">
         <item name="android:statusBarColor">@color/bluepj</item>
+        <!-- Outras configurações do tema aqui -->
     </style>
 
     <style name="Theme.IdadeAtiva" parent="Base.Theme.IdadeAtiva" />

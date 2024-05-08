@@ -90,7 +90,7 @@ public class activity_relatorio extends AppCompatActivity {
                 XAxis xAxis = lineChart.getXAxis();
                 xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
                 xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-                xAxis.setLabelRotationAngle(-75);
+                xAxis.setLabelRotationAngle(-90);
                 lineChart.setData(lineData);
                 lineChart.invalidate();
 

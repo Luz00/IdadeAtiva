@@ -2,6 +2,9 @@ package com.tcc.idadeativa;
 
 import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -15,111 +18,62 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private DAO dao;
+    private ImageButton[] userButtons = new ImageButton[3]; // Array para armazenar os botões de usuário
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ImageButton btnUser1 = findViewById(R.id.btnUser1);
-        ImageButton btnUser2 = findViewById(R.id.btnUser2);
-        ImageButton btnUser3 = findViewById(R.id.btnUser3);
+        userButtons[0] = findViewById(R.id.btnUser1);
+        userButtons[1] = findViewById(R.id.btnUser2);
+        userButtons[2] = findViewById(R.id.btnUser3);
 
         dao = new DAO(this);
         List<Pessoa> pessoas = dao.buscaPessoa();
 
-        if (!pessoas.isEmpty()) {
-            if (pessoas.size() >= 1) {
-                byte[] decodedString = Base64.decode(pessoas.get(0).getPessoa_foto(), Base64.DEFAULT);
-                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                btnUser1.setImageBitmap(decodedByte);
-                btnUser1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        abrirActivityPrincipal(pessoas.get(0));
-                    }
-                });
+        // Verificar se há usuários cadastrados
+        for (int i = 0; i < pessoas.size(); i++) {
+            if (i < userButtons.length) {
+                setUserData(userButtons[i], pessoas.get(i));
+            }
+        }
 
-            } else {
-                btnUser1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        abrirActivityCadastro();
-                    }
-                });
-            }
-            if (pessoas.size() >= 2) {
-                byte[] decodedString = Base64.decode(pessoas.get(1).getPessoa_foto(), Base64.DEFAULT);
-                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                btnUser2.setImageBitmap(decodedByte);
-                btnUser2.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        abrirActivityPrincipal(pessoas.get(1));
-                    }
-                });
-            } else {
-                btnUser2.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        abrirActivityCadastro();
-                    }
-                });
-            }
-            if (pessoas.size() >= 3) {
-                byte[] decodedString = Base64.decode(pessoas.get(2).getPessoa_foto(), Base64.DEFAULT);
-                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                btnUser3.setImageBitmap(decodedByte);
-                btnUser3.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        abrirActivityPrincipal(pessoas.get(2));
-                    }
-                });
-            } else {
-                btnUser3.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        abrirActivityCadastro();
-                    }
-                });
-            }
-        } else {
-            // Nenhum usuário cadastrado, definir a ação de clique para abrir a activity_cadastro
-            btnUser1.setImageResource(R.drawable.user); // Defina a imagem padrão aqui
-            btnUser1.setOnClickListener(new View.OnClickListener() {
+        // Definir a ação de clique para cada botão de usuário
+        for (int i = 0; i < userButtons.length; i++) {
+            final int index = i;
+            userButtons[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    abrirActivityCadastro();
-                }
-            });
-            btnUser2.setImageResource(R.drawable.user); // Defina a imagem padrão aqui
-            btnUser2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    abrirActivityCadastro();
-                }
-            });
-            btnUser3.setImageResource(R.drawable.user); // Defina a imagem padrão aqui
-            btnUser3.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    abrirActivityCadastro();
+                    if (pessoas.size() > index) {
+                        abrirActivityPrincipal(pessoas.get(index));
+                    } else {
+                        abrirActivityCadastro();
+                    }
                 }
             });
         }
     }
 
-        private void abrirActivityCadastro () {
-            Intent intent = new Intent(this, activity_cadastro.class);
-            startActivity(intent);
-            finish();
-        }
+    // Método para configurar a imagem e o nome do usuário em um botão de imagem
+    private void setUserData(ImageButton button, Pessoa pessoa) {
+        byte[] decodedString = Base64.decode(pessoa.getPessoa_foto(), Base64.DEFAULT);
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        button.setImageBitmap(decodedByte);
+    }
 
-        private void abrirActivityPrincipal(Pessoa pessoa) {
-            Intent intent = new Intent(this, activity_TelaPrincipal.class);
-            intent.putExtra("pessoa", pessoa);
-            startActivity(intent);
-            finish();
-        }
+    // Método para abrir a activity de cadastro
+    private void abrirActivityCadastro() {
+        Intent intent = new Intent(this, activity_cadastro.class);
+        startActivity(intent);
+        finish();
+    }
+
+    // Método para abrir a activity principal com os detalhes do usuário
+    private void abrirActivityPrincipal(Pessoa pessoa) {
+        Intent intent = new Intent(this, activity_TelaPrincipal.class);
+        intent.putExtra("pessoa", pessoa);
+        startActivity(intent);
+        finish();
+    }
 }
