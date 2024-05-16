@@ -4,33 +4,40 @@ import java.util.Date;
 
 public class Medicao {
 
-    Date data;
-    double valor;
-    int userId;
-    int diseaseId;
+    Date medicao_data;
+    Double medicao_valor;
+    Integer medicao_pessoaID;
+    Integer medicao_doencaID;
 
-    public Date getData() {
-        return data;
+    public Date getMedicao_data() {
+        return medicao_data;
     }
-    public void setData(Date data) {
-        this.data = data;
+
+    public void setMedicao_data(Date medicao_data) {
+        this.medicao_data = medicao_data;
     }
-    public double getValor() {
-        return valor;
+
+    public Double getMedicao_valor() {
+        return medicao_valor;
     }
-    public void setValor(double valor) {
-        this.valor = valor;
+
+    public void setMedicao_valor(Double medicao_valor) {
+        this.medicao_valor = medicao_valor;
     }
-    public int getUserId() {
-        return userId;
+
+    public Integer getMedicao_pessoaID() {
+        return medicao_pessoaID;
     }
-    public void setUserId(int userId) {
-        this.userId = userId;
+
+    public void setMedicao_pessoaID(Integer medicao_pessoaID) {
+        this.medicao_pessoaID = medicao_pessoaID;
     }
-    public int getDiseaseId() {
-        return diseaseId;
+
+    public Integer getMedicao_doencaID() {
+        return medicao_doencaID;
     }
-    public void setDiseaseId(int diseaseId) {
-        this.diseaseId = diseaseId;
+
+    public void setMedicao_doencaID(Integer medicao_doencaID) {
+        this.medicao_doencaID = medicao_doencaID;
     }
 }

@@ -1,34 +1,38 @@
 package com.tcc.idadeativa;
 
-import android.app.Activity;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Shader;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
-import android.net.Uri;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatButton;
 
 import com.tcc.idadeativa.DAO.DAO;
 import com.tcc.idadeativa.objetos.Pessoa;
@@ -36,12 +40,13 @@ import com.tcc.idadeativa.objetos.Pessoa;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-public class activity_cadastro extends Activity {
+public class activity_atualizacao extends AppCompatActivity {
 
-    private static final String TAG = "activity_cadastro";
+    private static final String TAG = "activity_atualizacao";
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     private static final int REQUEST_IMAGE_PICK = 2;
     private ImageView ivUser;
@@ -49,13 +54,10 @@ public class activity_cadastro extends Activity {
     private DAO dao;
     private Pessoa pessoa;
 
-    private List<Integer> doencasSelecionadas = new ArrayList<>();
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cadastro);
+        setContentView(R.layout.activity_atualizacao);
 
         EditText lblNome = findViewById(R.id.lblNome);
         EditText lblNomeSus = findViewById(R.id.lblNomeSus);
@@ -63,12 +65,17 @@ public class activity_cadastro extends Activity {
         ListView multiSelectListView = findViewById(R.id.multiSelectListView);
         TextView mDisplayDate = findViewById(R.id.tvDate);
         EditText lblNumeroCartao = findViewById(R.id.lblNumeroCartao);
-        AppCompatButton btnCancelar = findViewById(R.id.btnCancelar);
-        AppCompatButton btnConfirmar = findViewById(R.id.btnConfirmar);
         AppCompatButton btnFoto = findViewById(R.id.btnFoto);
+        AppCompatButton btnDrop = findViewById(R.id.btnDrop);
+        AppCompatButton btnAtualizar = findViewById(R.id.btnAtualizar);
+        AppCompatButton btnVoltar = findViewById(R.id.btnVoltar);
+        ivUser = findViewById(R.id.iv_User);
 
         dao = new DAO(this);
         List<String> nomesDoencas = dao.buscarNomesDoencas();
+        int idUsuario = getIdUsuarioLogado();
+        List<String> doencasDoUsuario = dao.buscarDoencasDoUsuario(idUsuario);
+        String sexoPessoa = dao.buscarSexoDaPessoa(idUsuario);
 
         lblNumeroCartao.addTextChangedListener(new TextWatcher() {
             @Override
@@ -92,11 +99,25 @@ public class activity_cadastro extends Activity {
             }
         });
 
+        /*CÓDIGO PARA SETAR OS VALORES DO USUÁRIO NOS CAMPOS*/
 
+        Pessoa pessoa = (Pessoa) getIntent().getSerializableExtra("pessoa");
 
-        /* CÓDIGO FOTO */
+        if (pessoa != null) {
+            // Preencher os campos com os dados da pessoa
+            lblNome.setText(pessoa.getPessoa_nome());
+            lblNomeSus.setText(pessoa.getPessoa_nomeSUS());
+            mDisplayDate.setText(pessoa.getPessoa_dataNascimento());
+            lblNumeroCartao.setText(pessoa.getPessoa_numSUS());
 
-        ivUser = findViewById(R.id.iv_User);
+            byte[] decodedString = Base64.decode(pessoa.getPessoa_foto(), Base64.DEFAULT);
+            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            ivUser.setImageBitmap(decodedByte);
+        }
+
+        /*--------------------------------------------------------------------------------*/
+
+        /* AÇÃO DO BOTÃO QUE ABRE A GALERIA PARA ESCOLHER FOTO */
 
         btnFoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,44 +128,74 @@ public class activity_cadastro extends Activity {
 
         /* ------------------------------------------------------------------------------------ */
 
-        /* CÓDIGO QUE VOLTA PARA A TELA INICIAL SE APERTAR O BOTAO CANCELAR */
+        /* CÓDIGO QUE CRIA O POPUP DE CONFIRMAÇÃO DE EXCLUSÃO DA CONTA DE USUÁRIO */
 
-        View.OnClickListener onClickListener = new View.OnClickListener() {
+        btnDrop.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                abrirTelaInicial();
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity_atualizacao.this);
+                builder.setTitle("Deseja realmente excluir sua conta?");
+                builder.setMessage("Essa ação é irreversível!");
+                // Adiciona o botão "Cancelar"
+                builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Fecha o diálogo
+                        dialog.dismiss();
+                    }
+                });
+                // Adiciona o botão "Confirmar"
+                builder.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        boolean excluidoComSucesso = dao.excluirPessoa(pessoa.getPessoa_ID());
+
+                        // Verificar se a exclusão foi bem-sucedida
+                        if (excluidoComSucesso) {
+                            Toast.makeText(activity_atualizacao.this, "Conta excluída com sucesso!", Toast.LENGTH_SHORT).show();
+                            abrirTelaInicial();
+                        } else {
+                            // Exibir mensagem de erro
+                            Toast.makeText(activity_atualizacao.this, "Erro ao excluir conta!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
-        };
-        btnCancelar.setOnClickListener(onClickListener);
+        });
+
         /* ------------------------------------------------------------------------------------ */
 
         /* CÓDIGO QUE CRIA O SPINNER COM AS OPÇÕES E TAMBÉM O LISTVIEW */
 
-
-        // Configure o Spinner para o sexo
-        ArrayAdapter<CharSequence> spinnerAdapter1 = ArrayAdapter.createFromResource(
+        // Configure o Spinner
+        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(
                 this,
                 R.array.array_sexo,
                 android.R.layout.simple_spinner_item
         );
-        spinnerAdapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        singleSelectSpinner.setAdapter(spinnerAdapter1);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        singleSelectSpinner.setAdapter(spinnerAdapter);
 
         // Configure o ListView para seleção múltipla
         ArrayAdapter<String> multiSelectAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice, nomesDoencas);
         multiSelectListView.setAdapter(multiSelectAdapter);
         multiSelectListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+
+        for (int i = 0; i < nomesDoencas.size(); i++) {
+            String doenca = nomesDoencas.get(i);
+            if (doencasDoUsuario.contains(doenca)) {
+                multiSelectListView.setItemChecked(i, true);
+            }
+        }
         multiSelectListView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                // Verifique se o evento é um clique fora do ListView
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    // Processar os itens selecionados
                     SparseBooleanArray checkedItems = multiSelectListView.getCheckedItemPositions();
                     for (int i = 0; i < multiSelectListView.getCount(); i++) {
                         if (checkedItems.get(i)) {
-                            // O item na posição i está selecionado
-                            // Faça algo com o item selecionado, por exemplo, adicione-o a uma lista
                         }
                     }
                 }
@@ -152,7 +203,10 @@ public class activity_cadastro extends Activity {
             }
         });
 
-
+        if (sexoPessoa != null) {
+            int index = spinnerAdapter.getPosition(sexoPessoa);
+            singleSelectSpinner.setSelection(index);
+        }
 
         /* ------------------------------------------------------------------------------------ */
 
@@ -167,7 +221,7 @@ public class activity_cadastro extends Activity {
                 int dia = cal.get(Calendar.DAY_OF_MONTH);
 
                 DatePickerDialog dialog = new DatePickerDialog(
-                        activity_cadastro.this,
+                        activity_atualizacao.this,
                         android.R.style.Theme_DeviceDefault_Dialog,
                         mDateSetListener,
                         dia, mes, ano);
@@ -186,54 +240,74 @@ public class activity_cadastro extends Activity {
         };
 
         /* ------------------------------------------------------------------------------------ */
-        /* CÓDIGO QUE QUANDO APERTAR O BOTÃO CONFIRMAR ELE PEGA AS INFOS DOS CAMPOS E SALVA NO BANCO */
 
-        btnConfirmar.setOnClickListener(new View.OnClickListener() {
+        btnVoltar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!(lblNome.getText().toString().equals("") || singleSelectSpinner.getSelectedItem().equals("") || mDisplayDate.getText().toString().equals("") || lblNomeSus.getText().toString().equals("") || lblNumeroCartao.getText().toString().equals(""))) {
-                    DAO dao = new DAO(getApplicationContext());
-                    Pessoa pessoa = new Pessoa();
-                    pessoa.setPessoa_nome(lblNome.getText().toString());
-                    String sexoSelecionado = singleSelectSpinner.getSelectedItem().toString();
-                    pessoa.setPessoa_sexo(sexoSelecionado);
-                    pessoa.setPessoa_dataNascimento(mDisplayDate.getText().toString());
-                    pessoa.setPessoa_nomeSUS(lblNomeSus.getText().toString());
-                    pessoa.setPessoa_numSUS(lblNumeroCartao.getText().toString());
-                    pessoa.setPessoa_foto(fotoString);
-
-                    long idUsuario = dao.inserePessoa(pessoa); // Insere a pessoa e obtém o ID do usuário inserido
-
-                    // Insere as doenças associadas ao usuário
-                    SparseBooleanArray checkedItems = multiSelectListView.getCheckedItemPositions();
-                    for (int i = 0; i < multiSelectListView.getCount(); i++) {
-                        if (checkedItems.get(i)) {
-                            int idDoenca = getIdDoencaFromPosition(i); // Obtenha o ID da doença com base na posição no ListView
-                            dao.inserePessoaDoenca((int) idUsuario, idDoenca); // Insere a associação entre usuário e doença
-                        }
-                    }
-
-                    dao.close();
-
-                    lblNome.setText("");
-                    mDisplayDate.setText("");
-                    lblNomeSus.setText("");
-                    lblNumeroCartao.setText("");
-
-                    Toast.makeText(getApplicationContext(), "Usuário cadastrado com sucesso!", Toast.LENGTH_SHORT).show();
-                    abrirTelaInicial();
-                } else {
-                    Toast.makeText(getApplicationContext(), "Por favor preencha todos os campos!", Toast.LENGTH_SHORT).show();
-                }
+                Pessoa pessoa = (Pessoa) getIntent().getSerializableExtra("pessoa");
+                abrirTelaPrincipal(pessoa);
             }
         });
 
-        /* ------------------------------------------------------------------------------------ */
+        btnAtualizar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!(lblNome.getText().toString().equals("") || singleSelectSpinner.getSelectedItem().equals("") || mDisplayDate.getText().toString().equals("") || lblNomeSus.getText().toString().equals("") || lblNumeroCartao.getText().toString().equals(""))){
+
+                    String nome = lblNome.getText().toString();
+                    String nomeSus = lblNomeSus.getText().toString();
+                    String dataNascimento = mDisplayDate.getText().toString();
+                    String numeroCartao = lblNumeroCartao.getText().toString();
+                    String sexo = singleSelectSpinner.getSelectedItem().toString();
+                    ImageView imageView = findViewById(R.id.iv_User);
+                    Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+                    String fotoString = encodeImage(bitmap);
+
+                    pessoa.setPessoa_nome(nome);
+                    pessoa.setPessoa_nomeSUS(nomeSus);
+                    pessoa.setPessoa_dataNascimento(dataNascimento);
+                    pessoa.setPessoa_numSUS(numeroCartao);
+                    pessoa.setPessoa_sexo(sexo);
+                    pessoa.setPessoa_foto(fotoString);
+                    // Atualizar os dados no banco de dados
+                    boolean atualizadoComSucesso = dao.atualizarPessoa(pessoa);
+
+                    // Obter ID do usuário logado
+                    int idUsuario = getIdUsuarioLogado();
+
+                    // Obter as doenças selecionadas no MultiSelectListView
+                    SparseBooleanArray checkedItems = multiSelectListView.getCheckedItemPositions();
+                    List<String> nomesDoencasSelecionadas = new ArrayList<>();
+                    for (int i = 0; i < multiSelectListView.getCount(); i++) {
+                        if (checkedItems.get(i)) {
+                            nomesDoencasSelecionadas.add(multiSelectAdapter.getItem(i));
+                        }
+                    }
+
+                    // Atualize a foto no objeto Pessoa
+                    pessoa.setPessoa_foto(fotoString);
+
+                    // Atualizar associações Pessoa-Doença
+                    dao.atualizarPessoaDoenca(idUsuario, nomesDoencasSelecionadas);
+
+                    if (atualizadoComSucesso) {
+                        Toast.makeText(activity_atualizacao.this, "Dados atualizados com sucesso!", Toast.LENGTH_SHORT).show();
+                        Pessoa pessoa = (Pessoa) getIntent().getSerializableExtra("pessoa");
+                        abrirTelaPrincipal(pessoa);
+                    }
+                }
+                else {
+                    Toast.makeText(activity_atualizacao.this, "Erro ao atualizar dados! Preencha todos os campos!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
-    private int getIdDoencaFromPosition(int position) {
-        // Retorna a posição como o ID da doença
-        return position + 1; // Assumindo que os IDs começam de 1
+    private void abrirTelaPrincipal(Pessoa pessoa) {
+        Intent intent = new Intent(this, activity_TelaPrincipal.class);
+        intent.putExtra("pessoa", pessoa);
+        startActivity(intent);
+        finish();
     }
 
     private void abrirTelaInicial() {
@@ -245,6 +319,11 @@ public class activity_cadastro extends Activity {
     private void escolherFonteDaFoto() {
         Intent escolherFotoIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(escolherFotoIntent, REQUEST_IMAGE_PICK);
+    }
+
+    private int getIdUsuarioLogado() {
+        Pessoa pessoa = (Pessoa) getIntent().getSerializableExtra("pessoa");
+        return pessoa.getPessoa_ID();
     }
 
     @Override
@@ -270,15 +349,6 @@ public class activity_cadastro extends Activity {
         }
     }
 
-
-    // Método para exibir a imagem de forma circular no ImageView
-    private void setCircularImage(ImageView imageView, Bitmap bitmap) {
-        if (bitmap != null) {
-            Bitmap circularBitmap = getCircleBitmap(bitmap);
-            imageView.setImageBitmap(circularBitmap);
-        }
-    }
-
     private Bitmap getCircleBitmap(Bitmap bitmap) {
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
@@ -294,4 +364,12 @@ public class activity_cadastro extends Activity {
 
         return circleBitmap;
     }
+
+    public String encodeImage(Bitmap bitmap) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 50, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
+        return Base64.encodeToString(byteArray, Base64.DEFAULT);
+    }
+
 }

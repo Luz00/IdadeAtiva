@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Insira sua medição de Hipertensão"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:paddingBottom="16dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <EditText
+            android:id="@+id/iptValor1"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:hint="EX: 13"
+            android:inputType="numberDecimal"
+            android:padding="8dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp"/>
+
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="POR"
+            android:textSize="18sp"
+            android:layout_marginEnd="20dp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp"/>
+
+        <EditText
+            android:id="@+id/iptValor2"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:hint="EX: 8"
+            android:inputType="numberDecimal"
+            android:padding="8dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnCancelar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:background="@drawable/background_button_cancel"
+            android:text="Cancelar"
+            android:layout_marginEnd="40dp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnSalvar"
+            android:layout_width="wrap_content"
+            android:textColor="@color/white"
+            android:background="@drawable/backgroud_button_form"
+            android:layout_height="wrap_content"
+            android:text="Salvar" />
+
+    </LinearLayout>
+</LinearLayout>

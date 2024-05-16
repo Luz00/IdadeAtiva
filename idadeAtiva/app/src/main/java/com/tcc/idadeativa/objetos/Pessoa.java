@@ -1,60 +1,64 @@
 package com.tcc.idadeativa.objetos;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Pessoa {
+public class Pessoa implements Serializable {
 
-    String nome, sexo, nomeSUS, dataNascimento, foto;
-    Integer numSUS, pessoa_id;
-    List<String> doencasPessoa;
+    String pessoa_nome;
+    String pessoa_sexo;
+    String pessoa_nomeSUS;
+    String pessoa_dataNascimento;
+    String pessoa_foto;
+    String pessoa_numSUS;
+    Integer pessoa_ID;
+//
+    public String getPessoa_nome() {
+        return pessoa_nome;
+    }
+    public void setPessoa_nome(String pessoa_nome) {
+        this.pessoa_nome = pessoa_nome;
+    }
+    public String getPessoa_sexo() {
+        return pessoa_sexo;
+    }
+    public void setPessoa_sexo(String pessoa_sexo) {
+        this.pessoa_sexo = pessoa_sexo;
+    }
+    public String getPessoa_nomeSUS() {
+        return pessoa_nomeSUS;
+    }
+    public void setPessoa_nomeSUS(String pessoa_nomeSUS) {
+        this.pessoa_nomeSUS = pessoa_nomeSUS;
+    }
+    public String getPessoa_dataNascimento() {
+        return pessoa_dataNascimento;
+    }
+    public void setPessoa_dataNascimento(String pessoa_dataNascimento) {
+        this.pessoa_dataNascimento = pessoa_dataNascimento;
+    }
+    public String getPessoa_foto() {
+        return pessoa_foto;
+    }
 
+    public void setPessoa_foto(String pessoa_foto) {
+        this.pessoa_foto = pessoa_foto;
+    }
 
-    public List<String> getDoencasPessoa() {
-        return doencasPessoa;
+    public String getPessoa_numSUS() {
+        return pessoa_numSUS;
     }
-    public void setDoencasPessoa(List<String> doencasPessoa) {
-        this.doencasPessoa = doencasPessoa;
+
+    public void setPessoa_numSUS(String pessoa_numSUS) {
+        this.pessoa_numSUS = pessoa_numSUS;
     }
-    public Integer getPessoa_id() {
-        return pessoa_id;
+
+    public Integer getPessoa_ID() {
+        return pessoa_ID;
     }
-    public void setPessoa_id(Integer pessoa_id) {
-        this.pessoa_id = pessoa_id;
+
+    public void setPessoa_ID(Integer pessoa_ID) {
+        this.pessoa_ID = pessoa_ID;
     }
-    public String getNome() {
-        return nome;
-    }
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-    public String getSexo() {
-        return sexo;
-    }
-    public void setSexo(String sexo) {
-        this.sexo = sexo;
-    }
-    public String getNomeSUS() {
-        return nomeSUS;
-    }
-    public void setNomeSUS(String nomeSUS) {
-        this.nomeSUS = nomeSUS;
-    }
-    public String getDataNascimento() {
-        return dataNascimento;
-    }
-    public void setDataNascimento(String dataNascimento) {
-        this.dataNascimento = dataNascimento;
-    }
-    public Integer getNumSUS() {
-        return numSUS;
-    }
-    public void setNumSUS(Integer numSUS) {
-        this.numSUS = numSUS;
-    }
-    public String getFoto() {
-        return foto;
-    }
-    public void setFoto(String foto) {
-        this.foto = foto;
-    }
+
 }
