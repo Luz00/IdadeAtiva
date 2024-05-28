@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.view.View;
@@ -86,6 +88,23 @@ public class activity_TelaPrincipal extends AppCompatActivity {
                         AppCompatButton btnCancelar_Diabetes = view.findViewById(R.id.btnCancelar);
                         AppCompatButton btnSalvar_Diabetes = view.findViewById(R.id.btnSalvar);
 
+                        // Adicionar filtro para permitir apenas números inteiros positivos com até 3 dígitos
+                        InputFilter[] filters = new InputFilter[2];
+                        filters[0] = new InputFilter.LengthFilter(3); // Limitar a 3 caracteres
+                        filters[1] = new InputFilter() {
+                            @Override
+                            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                                // Verificar se a entrada é um número inteiro positivo
+                                for (int i = start; i < end; i++) {
+                                    if (!Character.isDigit(source.charAt(i))) {
+                                        return "";
+                                    }
+                                }
+                                return null;
+                            }
+                        };
+                        editTextMedicao_Diabetes.setFilters(filters);
+
                         // Configurar a ação do botão Cancelar
                         btnCancelar_Diabetes.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -99,11 +118,11 @@ public class activity_TelaPrincipal extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
                                 // Obter o valor digitado pelo usuário
-                                String medição = editTextMedicao_Diabetes.getText().toString();
+                                String medicao = editTextMedicao_Diabetes.getText().toString();
                                 String dataAtual = obterDataHoraAtualBrasileira();
                                 int IdDoenca = getIdDoenca("Diabetes");
 
-                                boolean inseridoComSucesso = dao.inserirMedicao(dataAtual, Double.parseDouble(medição), idUsuario, IdDoenca);
+                                boolean inseridoComSucesso = dao.inserirMedicao(dataAtual, Double.parseDouble(medicao), idUsuario, IdDoenca);
 
                                 if (inseridoComSucesso) {
                                     Toast.makeText(activity_TelaPrincipal.this, "Medição salva com sucesso!", Toast.LENGTH_SHORT).show();
@@ -114,13 +133,14 @@ public class activity_TelaPrincipal extends AppCompatActivity {
                                 alertDialog.dismiss();
                             }
                         });
+
                         // Criar o AlertDialog
                         alertDialog = builder.create();
                         // Mostrar o AlertDialog
                         alertDialog.show();
                         break;
 
-                    case "Arritimia":
+                case "Arritimia":
                         view = getLayoutInflater().inflate(R.layout.popup_medicao_arritimia, null);
                         builder.setView(view);
 
@@ -128,6 +148,23 @@ public class activity_TelaPrincipal extends AppCompatActivity {
                         EditText editTextMedicao_Arritimia = view.findViewById(R.id.editTextMedicao);
                         AppCompatButton btnCancelar_Arritimia = view.findViewById(R.id.btnCancelar);
                         AppCompatButton btnSalvar_Arritimia = view.findViewById(R.id.btnSalvar);
+
+                        // Adicionar filtro para permitir apenas números inteiros positivos com até 3 dígitos
+                        InputFilter[] filters2 = new InputFilter[2];
+                        filters2[0] = new InputFilter.LengthFilter(3); // Limitar a 3 caracteres
+                        filters2[1] = new InputFilter() {
+                            @Override
+                            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                                // Verificar se a entrada é um número inteiro positivo
+                                for (int i = start; i < end; i++) {
+                                    if (!Character.isDigit(source.charAt(i))) {
+                                        return "";
+                                    }
+                                }
+                                return null;
+                            }
+                        };
+                        editTextMedicao_Arritimia.setFilters(filters2);
 
                         // Configurar a ação do botão Cancelar
                         btnCancelar_Arritimia.setOnClickListener(new View.OnClickListener() {
@@ -152,6 +189,8 @@ public class activity_TelaPrincipal extends AppCompatActivity {
                                 } else {
                                     Toast.makeText(activity_TelaPrincipal.this, "Erro ao salvar medição!", Toast.LENGTH_SHORT).show();
                                 }
+
+                                alertDialog.dismiss();
                             }
                         });
                         // Criar o AlertDialog
@@ -170,6 +209,24 @@ public class activity_TelaPrincipal extends AppCompatActivity {
 
                         AppCompatButton btnCancelar_Hipertensao = view.findViewById(R.id.btnCancelar);
                         AppCompatButton btnSalvar_Hipertensao = view.findViewById(R.id.btnSalvar);
+
+                        // Adicionar filtro para permitir apenas números inteiros positivos com até 3 dígitos
+                        InputFilter[] filters3 = new InputFilter[2];
+                        filters3[0] = new InputFilter.LengthFilter(2); // Limitar a 3 caracteres
+                        filters3[1] = new InputFilter() {
+                            @Override
+                            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                                // Verificar se a entrada é um número inteiro positivo
+                                for (int i = start; i < end; i++) {
+                                    if (!Character.isDigit(source.charAt(i))) {
+                                        return "";
+                                    }
+                                }
+                                return null;
+                            }
+                        };
+                        editTextMedicao_Hipertensao1.setFilters(filters3);
+                        editTextMedicao_Hipertensao2.setFilters(filters3);
 
                         // Configurar a ação do botão Cancelar
                         btnCancelar_Hipertensao.setOnClickListener(new View.OnClickListener() {
@@ -217,6 +274,24 @@ public class activity_TelaPrincipal extends AppCompatActivity {
                         AppCompatButton btnCancelar_hipotensao = view.findViewById(R.id.btnCancelar);
                         AppCompatButton btnSalvar_hipotensao = view.findViewById(R.id.btnSalvar);
 
+                        // Adicionar filtro para permitir apenas números inteiros positivos com até 3 dígitos
+                        InputFilter[] filters4 = new InputFilter[2];
+                        filters4[0] = new InputFilter.LengthFilter(2); // Limitar a 3 caracteres
+                        filters4[1] = new InputFilter() {
+                            @Override
+                            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                                // Verificar se a entrada é um número inteiro positivo
+                                for (int i = start; i < end; i++) {
+                                    if (!Character.isDigit(source.charAt(i))) {
+                                        return "";
+                                    }
+                                }
+                                return null;
+                            }
+                        };
+                        editTextMedicao_hipotensao1.setFilters(filters4);
+                        editTextMedicao_hipotensao2.setFilters(filters4);
+
                         // Configurar a ação do botão Cancelar
                         btnCancelar_hipotensao.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -262,6 +337,23 @@ public class activity_TelaPrincipal extends AppCompatActivity {
                         EditText editTextMedicao_depressao = view.findViewById(R.id.editTextMedicao);
                         AppCompatButton btnCancelar_Depressao = view.findViewById(R.id.btnCancelar);
                         AppCompatButton btnSalvar_Depressao = view.findViewById(R.id.btnSalvar);
+
+                        // Adicionar filtro para permitir apenas números inteiros positivos com até 3 dígitos
+                        InputFilter[] filters5 = new InputFilter[2];
+                        filters5[0] = new InputFilter.LengthFilter(1); // Limitar a 3 caracteres
+                        filters5[1] = new InputFilter() {
+                            @Override
+                            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                                // Verificar se a entrada é um número inteiro positivo
+                                for (int i = start; i < end; i++) {
+                                    if (!Character.isDigit(source.charAt(i))) {
+                                        return "";
+                                    }
+                                }
+                                return null;
+                            }
+                        };
+                        editTextMedicao_depressao.setFilters(filters5);
 
                         // Configurar a ação do botão Cancelar
                         btnCancelar_Depressao.setOnClickListener(new View.OnClickListener() {

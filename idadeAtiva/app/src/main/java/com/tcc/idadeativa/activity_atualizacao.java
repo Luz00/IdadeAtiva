@@ -224,7 +224,11 @@ public class activity_atualizacao extends AppCompatActivity {
                         activity_atualizacao.this,
                         android.R.style.Theme_DeviceDefault_Dialog,
                         mDateSetListener,
-                        dia, mes, ano);
+                        ano, mes, dia);
+
+                // Configurar a data máxima para hoje
+                dialog.getDatePicker().setMaxDate(cal.getTimeInMillis());
+
                 dialog.show();
             }
         });
@@ -232,7 +236,7 @@ public class activity_atualizacao extends AppCompatActivity {
         mDateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                month = month + 1;
+                month = month + 1; // O mês é indexado de 0 (Janeiro) a 11 (Dezembro)
                 Log.d(TAG, "onDateSet: date: " + dayOfMonth + "/" + month + "/" + year);
                 String data = dayOfMonth + "/" + month + "/" + year;
                 mDisplayDate.setText(data);
